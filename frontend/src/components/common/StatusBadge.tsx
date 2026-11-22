@@ -26,7 +26,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md' })
       case 'critical':
         return 'bg-rose-50 text-rose-800 border-rose-200';
       default:
-        return 'bg-slate-100 text-slate-700 border-slate-200';
+        return 'bg-[#F2F1EC] text-charcoal-700 border-[#E2E1DA]';
     }
   };
 
@@ -35,15 +35,15 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md' })
       case 'sm':
         return 'px-2 py-0.5 text-xs font-medium';
       case 'lg':
-        return 'px-3.5 py-1.5 text-sm font-semibold';
+        return 'px-3.5 py-1 text-sm font-semibold';
       default:
-        return 'px-2.5 py-1 text-xs font-semibold';
+        return 'px-2.5 py-0.5 text-xs font-semibold';
     }
   };
 
   return (
     <span
-      className={`inline-flex items-center rounded-md border font-mono tracking-wide ${getBadgeStyle()} ${getSizeStyle()}`}
+      className={`inline-flex items-center rounded-full border font-sans tracking-normal ${getBadgeStyle()} ${getSizeStyle()}`}
     >
       <span
         className={`w-2 h-2 rounded-full mr-1.5 shrink-0 ${

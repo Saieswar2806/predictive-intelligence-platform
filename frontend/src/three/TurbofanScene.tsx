@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { TurbofanCutawayModel, EngineSubsystemKey } from './TurbofanCutawayModel';
-import { Eye, RotateCcw, Crosshair } from 'lucide-react';
+import { Activity, Flame, ShieldAlert, CheckCircle2, RotateCcw } from 'lucide-react';
 
 interface TurbofanSceneProps {
   selectedComponent: EngineSubsystemKey | null;
@@ -11,6 +11,7 @@ interface TurbofanSceneProps {
   fanSpeed?: number;
   overallHealthIndex?: number;
   thermalStress?: number;
+  predictedRul?: number;
   subsystemsWear?: {
     fan?: number;
     hpc?: number;
@@ -27,7 +28,8 @@ export const TurbofanScene: React.FC<TurbofanSceneProps> = ({
   fanSpeed = 1.0,
   overallHealthIndex = 0.95,
   thermalStress = 1.0,
-  subsystemsWear,
+  predictedRul = 112,
+  subsystemsWear = { fan: 5, hpc: 8, combustor: 4, hpt: 10, lpt: 6 },
   interactive = true,
 }) => {
   const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -50,17 +52,35 @@ export const TurbofanScene: React.FC<TurbofanSceneProps> = ({
     controlsRef.current.update();
   };
 
+  const getSubsystemTitle = (sub: EngineSubsystemKey | null) => {
+    switch (sub) {
+      case 'fan': return 'Fan & Low Pressure Compressor';
+      case 'hpc': return 'High Pressure Compressor (HPC)';
+      case 'combustor': return 'Annular Combustor Section';
+      case 'hpt': return 'High Pressure Turbine (HPT)';
+      case 'lpt': return 'Low Pressure Turbine (LPT)';
+      case 'casing': return 'Aerodynamic Nacelle & Duct';
+      case 'exhaust': return 'Exhaust Mixer & Tail Plug';
+      default: return 'Core Gas Turbine Spool';
+    }
+  };
+
   return (
-    <div className="w-full h-full relative overflow-hidden bg-gradient-to-b from-slate-100 via-slate-150 to-slate-200/90 rounded-xl border border-slate-300 shadow-sm">
+    <div className="w-full h-full relative overflow-hidden bg-gradient-to-b from-[#F7F6F2] via-[#EFECE4] to-[#E3E0D6] rounded-2xl border border-[#E5E4DE] shadow-sm select-none">
       <Canvas shadows gl={{ antialias: true, alpha: true }}>
         <PerspectiveCamera makeDefault position={[3.8, 2.2, 4.2]} fov={40} />
 
-        {/* Industrial aerospace clean studio lighting */}
-        <ambientLight intensity={0.9} />
-        <directionalLight position={[6, 9, 5]} intensity={1.5} castShadow color="#ffffff" />
-        <directionalLight position={[-6, 4, -4]} intensity={0.8} color="#93c5fd" />
-        <directionalLight position={[0, -4, 0]} intensity={0.4} color="#94a3b8" />
-        <pointLight position={[0, 0.2, -1.5]} intensity={1.6} color={thermalStress > 1.3 ? '#f97316' : '#0284c7'} distance={4} />
+        {/* Warm Studio Engineering Illumination */}
+        <ambientLight intensity={1.1} color="#FFFBF5" />
+        <directionalLight position={[6, 9, 5]} intensity={1.6} castShadow color="#FFFFFF" />
+        <directionalLight position={[-6, 4, -4]} intensity={0.9} color="#E0E7FF" />
+        <directionalLight position={[0, -4, 0]} intensity={0.3} color="#D1D5DB" />
+        <pointLight
+          position={[0, 0.2, -1.5]}
+          intensity={1.8}
+          color={thermalStress > 1.3 ? '#EA580C' : '#0284C7'}
+          distance={4.5}
+        />
 
         <Suspense fallback={null}>
           <TurbofanCutawayModel
@@ -72,10 +92,10 @@ export const TurbofanScene: React.FC<TurbofanSceneProps> = ({
             subsystemsWear={subsystemsWear}
           />
 
-          {/* Technical circular ground reflection ring */}
+          {/* Warm Studio Reflection Ground Disc */}
           <mesh position={[0, -1.8, -0.3]} rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[1.8, 4.2, 64]} />
-            <meshStandardMaterial color="#94a3b8" transparent opacity={0.25} roughness={0.7} />
+            <ringGeometry args={[1.6, 4.4, 64]} />
+            <meshStandardMaterial color="#BDBAA9" transparent opacity={0.28} roughness={0.8} />
           </mesh>
         </Suspense>
 
@@ -92,59 +112,84 @@ export const TurbofanScene: React.FC<TurbofanSceneProps> = ({
         )}
       </Canvas>
 
-      {/* Camera View Switcher Buttons */}
-      <div className="absolute top-3 right-3 flex items-center space-x-1.5 bg-white/90 backdrop-blur-md border border-slate-300 p-1.5 rounded-lg text-xs font-mono text-slate-700 shadow-xs z-10">
-        <span className="text-slate-500 px-1 font-semibold hidden sm:inline">VIEW:</span>
+      {/* FLOATING WHITE TELEMETRY CARDS (Top-Left, Top-Right, Bottom-Left, Bottom-Right) */}
+
+      {/* Floating Card 1: Engine Health Index Callout (Top-Left) */}
+      <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md border border-[#E5E4DE] rounded-xl px-3.5 py-2.5 shadow-sm pointer-events-none">
+        <div className="flex items-center space-x-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-charcoal-500">Fleet Health</span>
+        </div>
+        <div className="mt-1 flex items-baseline space-x-1.5">
+          <span className="text-lg font-bold text-charcoal-900 font-sans">
+            {Math.round(overallHealthIndex * 100)}%
+          </span>
+          <span className="text-xs font-medium text-emerald-700">Nominal Margin</span>
+        </div>
+      </div>
+
+      {/* Floating Card 2: Camera Presets (Top-Right) */}
+      <div className="absolute top-4 right-4 flex items-center space-x-1 bg-white/95 backdrop-blur-md border border-[#E5E4DE] p-1.5 rounded-xl text-xs font-sans text-charcoal-700 shadow-sm z-10">
+        <span className="text-charcoal-400 px-1 font-semibold text-[11px] hidden sm:inline">PRESET:</span>
         <button
           onClick={() => setCameraView('iso')}
-          className="px-2.5 py-1 rounded hover:bg-slate-100 font-semibold text-slate-800 transition-colors"
-          title="Isometric View"
+          className="px-2.5 py-1 rounded-lg hover:bg-[#F2F1EC] font-semibold text-charcoal-800 transition-colors"
+          title="Isometric CAD Perspective"
         >
           ISO
         </button>
         <button
           onClick={() => setCameraView('side')}
-          className="px-2.5 py-1 rounded hover:bg-slate-100 font-semibold text-slate-800 transition-colors"
+          className="px-2.5 py-1 rounded-lg hover:bg-[#F2F1EC] font-semibold text-charcoal-800 transition-colors"
           title="Side Profile"
         >
           SIDE
         </button>
         <button
           onClick={() => setCameraView('front')}
-          className="px-2.5 py-1 rounded hover:bg-slate-100 font-semibold text-slate-800 transition-colors"
+          className="px-2.5 py-1 rounded-lg hover:bg-[#F2F1EC] font-semibold text-charcoal-800 transition-colors"
           title="Front Intake Fan"
         >
           INLET
         </button>
         <button
           onClick={() => setCameraView('turbine')}
-          className="px-2.5 py-1 rounded hover:bg-slate-100 font-semibold text-slate-800 transition-colors"
-          title="Turbine Hot Section"
+          className="px-2.5 py-1 rounded-lg hover:bg-[#F2F1EC] font-semibold text-charcoal-800 transition-colors"
+          title="Hot Turbine Core"
         >
           CORE
         </button>
       </div>
 
-      {/* Engineering CAD Legend */}
-      <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md border border-slate-300 px-3 py-1.5 rounded-lg text-xs font-mono text-slate-700 flex items-center space-x-2 pointer-events-none select-none shadow-xs">
-        <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-        <span className="font-semibold text-slate-800">AEROTWIN-3D // C-MAPSS HIGH-BYPASS DUAL-SPOOL</span>
-      </div>
-
-      {/* Selected Component Indicator Overlay */}
+      {/* Floating Card 3: Selected Component Diagnostic Overlay (Bottom-Left) */}
       {selectedComponent && (
-        <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md border border-slate-300 px-3.5 py-2 rounded-lg text-xs font-mono text-slate-800 pointer-events-none select-none shadow-sm">
-          <div className="flex items-center space-x-2 text-blue-700 font-bold uppercase">
-            <Crosshair className="w-4 h-4 text-blue-600" />
-            <span>ACTIVE FOCUS: {selectedComponent.toUpperCase()}</span>
+        <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-md border border-[#E5E4DE] px-4 py-3 rounded-xl shadow-sm pointer-events-none max-w-xs">
+          <div className="flex items-center space-x-2 text-blue-700 text-xs font-bold uppercase tracking-wide">
+            <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+            <span>{selectedComponent.toUpperCase()} INSPECTION</span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">Click component directly or select subsystem tab</p>
+          <p className="text-sm font-bold text-charcoal-900 mt-0.5">{getSubsystemTitle(selectedComponent)}</p>
+          <div className="mt-1.5 flex items-center space-x-3 text-xs text-charcoal-600">
+            <span>Wear: <strong className="text-charcoal-900 font-semibold">{subsystemsWear[selectedComponent as keyof typeof subsystemsWear] ?? 12}%</strong></span>
+            <span>•</span>
+            <span className="text-emerald-700 font-semibold">TBO Cleared</span>
+          </div>
         </div>
       )}
 
-      {/* Subtle Hint */}
-      <div className="absolute bottom-3 right-3 text-[11px] font-mono text-slate-600 bg-white/90 backdrop-blur-xs px-2.5 py-1 rounded-md border border-slate-300 pointer-events-none select-none shadow-xs">
-        Rotate: Left-Click • Pan: Right-Click • Zoom: Scroll
+      {/* Floating Card 4: Prognostic Telemetry Overlay (Bottom-Right) */}
+      <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-md border border-[#E5E4DE] px-4 py-2.5 rounded-xl shadow-sm pointer-events-none hidden sm:flex items-center space-x-4">
+        <div>
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-charcoal-500 block">Forecast RUL</span>
+          <span className="text-base font-bold text-charcoal-900 font-sans">{predictedRul} cycles</span>
+        </div>
+        <div className="h-7 w-px bg-[#E5E4DE]"></div>
+        <div>
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-charcoal-500 block">Core Exhaust EGT</span>
+          <span className={`text-base font-bold font-sans ${thermalStress > 1.3 ? 'text-amber-600' : 'text-charcoal-900'}`}>
+            {thermalStress > 1.3 ? '1,424 °R' : '1,404 °R'}
+          </span>
+        </div>
       </div>
     </div>
   );

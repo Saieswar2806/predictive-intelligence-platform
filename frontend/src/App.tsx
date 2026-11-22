@@ -12,10 +12,38 @@ import { MLOpsSystemHealth } from './pages/MLOpsSystemHealth';
 import { api } from './services/api';
 
 export const App: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<PageId>('command-center');
+  const getPageFromHash = (): PageId => {
+    const hash = window.location.hash.replace('#', '');
+    const validPages: PageId[] = [
+      'command-center',
+      'digital-twin',
+      'machine-intelligence',
+      'model-evaluation',
+      'explainable-ai',
+      'anomaly-intelligence',
+      'maintenance-planning',
+      'mlops-health',
+    ];
+    return validPages.includes(hash as PageId) ? (hash as PageId) : 'command-center';
+  };
+
+  const [currentPage, setCurrentPage] = useState<PageId>(getPageFromHash());
   const [apiConnected, setApiConnected] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [selectedEngineId, setSelectedEngineId] = useState<number>(1);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentPage(getPageFromHash());
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const handleNavigate = (page: PageId) => {
+    window.location.hash = page;
+    setCurrentPage(page);
+  };
 
   useEffect(() => {
     checkConnection();
@@ -43,7 +71,7 @@ export const App: React.FC = () => {
 
   const handleSelectEngine = (engineId: number) => {
     setSelectedEngineId(engineId);
-    setCurrentPage('machine-intelligence');
+    handleNavigate('machine-intelligence');
   };
 
   const renderActivePage = () => {
@@ -52,7 +80,7 @@ export const App: React.FC = () => {
         return (
           <CommandCenter
             onSelectEngine={handleSelectEngine}
-            onNavigateToTwin={() => setCurrentPage('digital-twin')}
+            onNavigateToTwin={() => handleNavigate('digital-twin')}
           />
         );
       case 'digital-twin':
@@ -73,7 +101,7 @@ export const App: React.FC = () => {
         return (
           <CommandCenter
             onSelectEngine={handleSelectEngine}
-            onNavigateToTwin={() => setCurrentPage('digital-twin')}
+            onNavigateToTwin={() => handleNavigate('digital-twin')}
           />
         );
     }
@@ -82,10 +110,12 @@ export const App: React.FC = () => {
   return (
     <AppLayout
       currentPage={currentPage}
-      onNavigate={setCurrentPage}
+      onNavigate={handleNavigate}
       apiConnected={apiConnected}
       onRefresh={handleRefresh}
       isRefreshing={isRefreshing}
+      selectedEngineId={selectedEngineId}
+      onSelectEngine={(id) => setSelectedEngineId(id)}
     >
       {renderActivePage()}
     </AppLayout>

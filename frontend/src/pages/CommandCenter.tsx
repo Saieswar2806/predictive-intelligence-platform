@@ -10,18 +10,14 @@ import {
   BarChart2,
   ShieldAlert,
   Search,
-  Filter,
-  Eye,
-  Radio,
-  Zap,
   Check,
   Bell,
   Cpu,
   Thermometer,
   Gauge,
   Sliders,
+  Info,
   ExternalLink,
-  Info
 } from 'lucide-react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { api } from '../services/api';
@@ -162,7 +158,7 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
 
   if (error || !fleetData) {
     return (
-      <div className="bg-rose-50 border border-rose-200 text-rose-800 p-6 rounded-xl text-sm font-mono shadow-xs">
+      <div className="bg-rose-50 border border-rose-200 text-rose-800 p-6 rounded-2xl text-sm shadow-xs font-sans">
         <h3 className="font-bold text-rose-900 text-base mb-1 flex items-center space-x-2">
           <AlertTriangle className="w-5 h-5 text-rose-600" />
           <span>Fleet Telemetry Query Failed</span>
@@ -170,7 +166,7 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
         <p className="text-sm text-rose-700 mb-4">{error || 'Unable to connect to FastAPI backend'}</p>
         <button
           onClick={loadFleet}
-          className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-xs font-semibold transition-colors shadow-xs"
+          className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold transition-colors shadow-xs"
         >
           Retry Connection
         </button>
@@ -202,9 +198,9 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
   const activeAlertsCount = alerts.filter((a) => !a.acknowledged).length;
 
   return (
-    <div className="space-y-7">
+    <div className="space-y-7 font-sans">
       {/* ==================================================================== */}
-      {/* SECTION A: OVERVIEW & FLEET KPI COMMAND STRIP                        */}
+      {/* 1. BENTO FLEET OVERVIEW COMMAND STRIP                                */}
       {/* ==================================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
         <MetricCard
@@ -240,7 +236,7 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
           value={activeAlertsCount}
           subtitle={`${alerts.length - activeAlertsCount} acknowledged`}
           icon={Bell}
-          variant={activeAlertsCount > 0 ? 'danger' : 'success'}
+          variant={activeAlertsCount > 0 ? 'warning' : 'success'}
         />
         <MetricCard
           title="Fleet Health Index"
@@ -252,29 +248,29 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
       </div>
 
       {/* ==================================================================== */}
-      {/* BALANCED 3D + ANALYTICS HERO WORKSPACE                               */}
+      {/* 2. SPATIOUS 3D WORKSPACE & PREDICTIVE INTELLIGENCE BENTO GRID        */}
       {/* ==================================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-        {/* Left: Large 3D Turbofan Digital Twin Viewport */}
-        <div className="lg:col-span-7 bg-white border border-slate-200/90 rounded-xl p-6 shadow-xs flex flex-col justify-between">
+        {/* Left: Large Central 3D Turbofan Digital Twin Workspace (7 Cols) */}
+        <div className="lg:col-span-7 bg-white border border-[#E5E4DE] rounded-2xl p-6 shadow-bento flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+            <div className="flex items-center justify-between pb-4 border-b border-[#E5E4DE] mb-4">
               <div>
                 <div className="flex items-center space-x-2.5">
-                  <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">
+                  <h3 className="text-xl font-bold text-charcoal-900 tracking-tight font-sans">
                     Turbofan Digital Twin Core Cutaway
                   </h3>
-                  <span className="text-xs bg-blue-50 border border-blue-200 text-blue-700 px-2.5 py-0.5 rounded-full font-mono font-semibold">
-                    WEBGL 2.0 // R3F
+                  <span className="text-xs bg-blue-50 border border-blue-200 text-blue-700 px-2.5 py-0.5 rounded-full font-semibold">
+                    Interactive 3D Cutaway
                   </span>
                 </div>
-                <p className="text-sm text-slate-500 mt-1">
-                  High-fidelity aerodynamic cutaway model with dynamic wear coloring and real-time spool rotation
+                <p className="text-sm text-charcoal-500 mt-1 font-normal">
+                  Detailed mechanical cutaway with realistic titanium materials, interactive hotspots, and floating telemetry
                 </p>
               </div>
               <button
                 onClick={onNavigateToTwin}
-                className="flex items-center space-x-2 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold transition-all shadow-xs shrink-0"
+                className="flex items-center space-x-2 px-3.5 py-2 bg-[#2563EB] hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition-all shadow-xs shrink-0"
               >
                 <span>Full Studio</span>
                 <ArrowRight className="w-4 h-4" />
@@ -283,14 +279,14 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
 
             {/* Subsystem quick-inspection selectors */}
             <div className="flex flex-wrap gap-2 mb-4">
-              {(['fan', 'hpc', 'combustor', 'hpt', 'lpt', 'casing'] as EngineSubsystemKey[]).map((sub) => (
+              {(['fan', 'hpc', 'combustor', 'hpt', 'lpt', 'casing', 'exhaust'] as EngineSubsystemKey[]).map((sub) => (
                 <button
                   key={sub}
                   onClick={() => setSelectedSubsystem(sub)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all uppercase font-semibold ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all uppercase ${
                     selectedSubsystem === sub
-                      ? 'bg-blue-600 text-white shadow-xs'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
+                      ? 'bg-[#2563EB] text-white shadow-xs'
+                      : 'bg-[#F4F3EE] text-charcoal-600 hover:bg-[#EAE9E4] hover:text-charcoal-900'
                   }`}
                 >
                   {sub}
@@ -299,14 +295,15 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
             </div>
           </div>
 
-          {/* Large 3D Scene viewport (substantial height for immersive inspection) */}
-          <div className="h-96 w-full rounded-xl overflow-hidden relative shadow-inner">
+          {/* Large 3D Scene Viewport (Prominent height ~420px) */}
+          <div className="h-[420px] w-full rounded-2xl overflow-hidden relative shadow-inner">
             <TurbofanScene
               selectedComponent={selectedSubsystem}
               onSelectComponent={setSelectedSubsystem}
               fanSpeed={activeEngine.risk_level === 'HIGH' ? 0.6 : 1.2}
               overallHealthIndex={activeEngine.health_index}
               thermalStress={activeEngine.sensors.sensor_4 > 1420 ? 1.4 : 1.0}
+              predictedRul={activeEngine.predicted_rul}
               subsystemsWear={{
                 fan: Math.round((1 - activeEngine.health_index) * 45),
                 hpc: Math.round((1 - activeEngine.health_index) * 85),
@@ -317,79 +314,83 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
             />
           </div>
 
-          <div className="mt-4 pt-3.5 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500 font-mono">
-            <span className="font-semibold text-slate-700">INSPECTING: ENG-{activeEngine.engine_id.toString().padStart(3, '0')}</span>
-            <span className="text-blue-600 font-semibold">FOCUS: {selectedSubsystem?.toUpperCase()}</span>
-            <span className="text-emerald-700 font-semibold">PHYSICS: C-MAPSS FD001</span>
+          <div className="mt-4 pt-3.5 border-t border-[#E5E4DE] flex items-center justify-between text-xs text-charcoal-500">
+            <span className="font-semibold text-charcoal-800">
+              TARGET: <span className="text-[#2563EB]">ENG-{activeEngine.engine_id.toString().padStart(3, '0')}</span>
+            </span>
+            <span className="text-charcoal-600 font-medium">
+              FOCUS: <strong className="text-charcoal-900">{selectedSubsystem?.toUpperCase()}</strong>
+            </span>
+            <span className="text-emerald-700 font-semibold">C-MAPSS AERODYNAMIC PROFILE</span>
           </div>
         </div>
 
-        {/* Right: Predictive Intelligence & Diagnostics */}
-        <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-xl p-6 shadow-xs flex flex-col justify-between">
+        {/* Right: Predictive Intelligence Hub (5 Cols) */}
+        <div className="lg:col-span-5 bg-white border border-[#E5E4DE] rounded-2xl p-6 shadow-bento flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
+            <div className="flex items-center justify-between pb-4 border-b border-[#E5E4DE] mb-4">
               <div>
                 <div className="flex items-center space-x-2.5">
-                  <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">
+                  <h3 className="text-xl font-bold text-charcoal-900 tracking-tight font-sans">
                     Predictive Intelligence Hub
                   </h3>
-                  <span className="text-xs bg-emerald-50 border border-emerald-200 text-emerald-700 px-2.5 py-0.5 rounded-full font-mono font-semibold">
-                    XGBOOST ML
+                  <span className="text-xs bg-emerald-50 border border-emerald-200 text-emerald-700 px-2.5 py-0.5 rounded-full font-semibold">
+                    XGBoost ML
                   </span>
                 </div>
-                <p className="text-sm text-slate-500 mt-1">
-                  Target: <span className="text-blue-600 font-mono font-bold">ENG-{activeEngine.engine_id.toString().padStart(3, '0')}</span> (Flight Cycle {activeEngine.current_cycle})
+                <p className="text-sm text-charcoal-500 mt-1">
+                  Active Asset: <strong className="text-blue-600">ENG-{activeEngine.engine_id.toString().padStart(3, '0')}</strong> (Flight Cycle {activeEngine.current_cycle})
                 </p>
               </div>
               <Cpu className="w-6 h-6 text-blue-600" />
             </div>
 
-            {/* Prediction Hero Readout */}
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5 shadow-xs">
+            {/* Prediction Hero Readout Box */}
+            <div className="bg-[#FAF9F5] border border-[#E5E4DE] rounded-2xl p-5 mb-5 shadow-xs">
               <div className="flex items-start justify-between">
                 <div>
-                  <span className="text-xs font-mono text-slate-500 uppercase tracking-wider font-semibold">
+                  <span className="text-xs font-semibold text-charcoal-500 uppercase tracking-wider">
                     Remaining Useful Life (RUL)
                   </span>
-                  <div className="text-4xl font-bold font-mono text-slate-900 mt-1 tracking-tight">
+                  <div className="text-4xl font-bold text-charcoal-900 mt-1.5 tracking-tight font-sans">
                     {activePrediction ? `${activePrediction.predicted_rul_cycles}` : `${activeEngine.predicted_rul}`}
-                    <span className="text-base font-normal text-slate-500 ml-2">cycles</span>
+                    <span className="text-base font-normal text-charcoal-500 ml-2">cycles</span>
                   </div>
-                  <p className="text-xs font-mono text-slate-600 mt-1.5">
-                    Confidence Interval: <span className="font-semibold text-slate-800">±9.8 cycles (Test MAE bound)</span>
+                  <p className="text-xs text-charcoal-600 mt-2">
+                    Confidence Interval: <strong className="text-charcoal-800">±9.8 cycles (Test MAE bound)</strong>
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs font-mono text-slate-500 uppercase tracking-wider font-semibold">
+                  <span className="text-xs font-semibold text-charcoal-500 uppercase tracking-wider">
                     Risk Level
                   </span>
-                  <div className="mt-1.5">
+                  <div className="mt-2">
                     <StatusBadge status={activePrediction?.maintenance_risk || activeEngine.risk_level} size="lg" />
                   </div>
                 </div>
               </div>
 
               {/* Urgency Directive Banner */}
-              <div className="mt-4 pt-3 border-t border-slate-200 flex items-center space-x-2 text-sm">
+              <div className="mt-4 pt-3.5 border-t border-[#E5E4DE] flex items-center space-x-2 text-xs">
                 <Info className="w-4 h-4 text-blue-600 shrink-0" />
-                <span className="text-slate-700 text-xs font-medium">
+                <span className="text-charcoal-700 font-medium leading-relaxed">
                   {activePrediction?.urgency_action || (activeEngine.predicted_rul < 25 ? 'Immediate depot-level removal required.' : 'Turbofan operates within normal flight envelope.')}
                 </span>
               </div>
             </div>
 
             {/* Health & Anomaly Attribution Details */}
-            <div className="grid grid-cols-2 gap-3.5 mb-5 text-sm font-mono">
-              <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
-                <span className="text-slate-500 text-xs font-semibold">HEALTH INDEX</span>
-                <div className="text-lg font-bold text-emerald-700 mt-1">
+            <div className="grid grid-cols-2 gap-3.5 mb-5 text-sm">
+              <div className="bg-[#FAF9F5] p-3.5 rounded-xl border border-[#E5E4DE]">
+                <span className="text-charcoal-500 text-xs font-semibold uppercase tracking-wider">HEALTH INDEX</span>
+                <div className="text-xl font-bold text-emerald-700 mt-1 font-sans">
                   {activePrediction?.health_assessment.health_index.toFixed(2) || activeEngine.health_index.toFixed(2)}
-                  <span className="text-slate-400 text-xs font-normal"> / 1.00</span>
+                  <span className="text-charcoal-400 text-xs font-normal"> / 1.00</span>
                 </div>
               </div>
-              <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
-                <span className="text-slate-500 text-xs font-semibold">ANOMALY STATUS</span>
-                <div className="mt-1">
+              <div className="bg-[#FAF9F5] p-3.5 rounded-xl border border-[#E5E4DE]">
+                <span className="text-charcoal-500 text-xs font-semibold uppercase tracking-wider">ANOMALY STATUS</span>
+                <div className="mt-1.5">
                   <StatusBadge status={activePrediction?.health_assessment.severity || activeEngine.anomaly_status} size="sm" />
                 </div>
               </div>
@@ -397,34 +398,36 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
 
             {/* Dominant Sensor Signatures */}
             <div>
-              <span className="text-xs font-mono text-slate-500 uppercase tracking-wider block mb-2.5 font-bold">
+              <span className="text-xs font-bold text-charcoal-500 uppercase tracking-wider block mb-2.5">
                 Critical Station Telemetry
               </span>
-              <div className="grid grid-cols-3 gap-2.5 text-xs font-mono">
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                  <div className="text-slate-500 font-semibold">T24 (Fan Inlet)</div>
-                  <div className="text-sm font-bold text-slate-800 mt-1">
-                    {activeEngine.sensors.sensor_2?.toFixed(1)} <span className="text-xs text-slate-500 font-normal">°R</span>
+              <div className="grid grid-cols-3 gap-2.5 text-xs">
+                <div className="bg-[#FAF9F5] p-3 rounded-xl border border-[#E5E4DE]">
+                  <div className="text-charcoal-500 font-semibold text-[11px]">T24 (Fan Inlet)</div>
+                  <div className="text-sm font-bold text-charcoal-800 mt-1">
+                    {activeEngine.sensors.sensor_2?.toFixed(1)} <span className="text-xs text-charcoal-400 font-normal">°R</span>
                   </div>
                 </div>
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                  <div className="text-slate-500 font-semibold">T30 (HPC Temp)</div>
-                  <div className="text-sm font-bold text-slate-800 mt-1">
-                    {activeEngine.sensors.sensor_3?.toFixed(1)} <span className="text-xs text-slate-500 font-normal">°R</span>
+                <div className="bg-[#FAF9F5] p-3 rounded-xl border border-[#E5E4DE]">
+                  <div className="text-charcoal-500 font-semibold text-[11px]">T30 (HPC Temp)</div>
+                  <div className="text-sm font-bold text-charcoal-800 mt-1">
+                    {activeEngine.sensors.sensor_3?.toFixed(1)} <span className="text-xs text-charcoal-400 font-normal">°R</span>
                   </div>
                 </div>
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                  <div className="text-slate-500 font-semibold">T50 (LPT Temp)</div>
-                  <div className={`text-sm font-bold mt-1 ${activeEngine.sensors.sensor_4 > 1420 ? 'text-rose-600' : 'text-slate-800'}`}>
-                    {activeEngine.sensors.sensor_4?.toFixed(1)} <span className="text-xs text-slate-500 font-normal">°R</span>
+                <div className="bg-[#FAF9F5] p-3 rounded-xl border border-[#E5E4DE]">
+                  <div className="text-charcoal-500 font-semibold text-[11px]">T50 (LPT Temp)</div>
+                  <div className={`text-sm font-bold mt-1 ${activeEngine.sensors.sensor_4 > 1420 ? 'text-rose-600' : 'text-charcoal-800'}`}>
+                    {activeEngine.sensors.sensor_4?.toFixed(1)} <span className="text-xs text-charcoal-400 font-normal">°R</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-5 pt-4 border-t border-slate-200 flex justify-between items-center">
-            <span className="text-xs font-mono text-slate-500">PROVENANCE: {activePrediction?.provenance?.calculation_method || 'full_history_rolling'}</span>
+          <div className="mt-5 pt-4 border-t border-[#E5E4DE] flex justify-between items-center">
+            <span className="text-xs text-charcoal-500">
+              Calculation: <strong className="text-charcoal-700">{activePrediction?.provenance?.calculation_method || 'full_history_rolling'}</strong>
+            </span>
             <button
               onClick={() => onSelectEngine(activeEngine.engine_id)}
               className="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center space-x-1.5"
@@ -437,128 +440,130 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
       </div>
 
       {/* ==================================================================== */}
-      {/* SECTION E: FLEET ANALYTICS & BENCHMARK PERFORMANCE                  */}
+      {/* 3. PROGNOSTIC ANALYTICS & GOVERNANCE BENTO STRIP                     */}
       {/* ==================================================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* RUL Distribution Histogram */}
-        <div className="lg:col-span-8 bg-white border border-slate-200/90 rounded-xl p-6 shadow-xs">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-3">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        {/* RUL Distribution Histogram (8 Cols) */}
+        <div className="lg:col-span-8 bg-white border border-[#E5E4DE] rounded-2xl p-6 shadow-bento">
+          <div className="flex items-center justify-between pb-4 border-b border-[#E5E4DE] mb-3">
             <div>
-              <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">
+              <h3 className="text-xl font-bold text-charcoal-900 tracking-tight font-sans">
                 Fleet RUL Prognostic Distribution
               </h3>
-              <p className="text-sm text-slate-500 mt-1">Remaining Useful Life frequency distribution across 100 in-service turbofans</p>
+              <p className="text-sm text-charcoal-500 mt-0.5">Remaining Useful Life frequency distribution across 100 in-service turbofans</p>
             </div>
-            <BarChart2 className="w-5 h-5 text-slate-400" />
+            <BarChart2 className="w-5 h-5 text-charcoal-400" />
           </div>
 
           <div className="h-64 w-full pt-3">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={rulBins} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                <XAxis dataKey="range" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={{ stroke: '#cbd5e1' }} tickLine={false} />
-                <YAxis tick={{ fontSize: 12, fill: '#64748b' }} axisLine={{ stroke: '#cbd5e1' }} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#EAE9E4" vertical={false} />
+                <XAxis dataKey="range" tick={{ fontSize: 12, fill: '#606670' }} axisLine={{ stroke: '#D6D4CC' }} tickLine={false} />
+                <YAxis tick={{ fontSize: 12, fill: '#606670' }} axisLine={{ stroke: '#D6D4CC' }} tickLine={false} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#ffffff',
-                    borderColor: '#cbd5e1',
-                    borderRadius: '8px',
-                    color: '#0f172a',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E5E4DE',
+                    borderRadius: '12px',
+                    color: '#1C1E21',
                     fontSize: '13px',
-                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
                   }}
                 />
-                <Bar dataKey="count" fill="#2563eb" radius={[6, 6, 0, 0]} name="Turbofans" />
+                <Bar dataKey="count" fill="#2563EB" radius={[6, 6, 0, 0]} name="Turbofans" />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
-          <div className="mt-4 pt-3.5 border-t border-slate-200 text-xs text-slate-500 flex justify-between font-mono">
+          <div className="mt-4 pt-3.5 border-t border-[#E5E4DE] text-xs text-charcoal-500 flex justify-between font-sans">
             <span>NASA C-MAPSS FD001 • 125 CYCLE CAP BENCHMARK</span>
             <span className="text-rose-600 font-semibold">{fleetData.critical_count} Engines at Immediate AOG Removal Threshold</span>
           </div>
         </div>
 
-        {/* Fleet Risk & ML Model Governance Summary */}
-        <div className="lg:col-span-4 bg-white border border-slate-200/90 rounded-xl p-6 shadow-xs flex flex-col justify-between">
+        {/* Model Governance Specifications (4 Cols) */}
+        <div className="lg:col-span-4 bg-white border border-[#E5E4DE] rounded-2xl p-6 shadow-bento flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
-              <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">Model Engine Specs</h3>
-              <span className="text-xs font-mono font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+            <div className="flex items-center justify-between pb-4 border-b border-[#E5E4DE] mb-4">
+              <h3 className="text-xl font-bold text-charcoal-900 tracking-tight font-sans">Model Engine Specs</h3>
+              <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
                 AUDITED
               </span>
             </div>
 
-            <div className="space-y-3 text-sm font-mono">
-              <div className="flex justify-between py-2 border-b border-slate-100">
-                <span className="text-slate-500">Selected Architecture</span>
-                <span className="text-slate-900 font-semibold">Tuned XGBoost</span>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between py-2 border-b border-[#F0EFEA]">
+                <span className="text-charcoal-500">Selected Architecture</span>
+                <span className="text-charcoal-900 font-semibold">Tuned XGBoost</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100">
-                <span className="text-slate-500">Selection Protocol</span>
+              <div className="flex justify-between py-2 border-b border-[#F0EFEA]">
+                <span className="text-charcoal-500">Selection Protocol</span>
                 <span className="text-blue-600 font-semibold">Validation Only (Zero Leakage)</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100">
-                <span className="text-slate-500">Validation RMSE</span>
+              <div className="flex justify-between py-2 border-b border-[#F0EFEA]">
+                <span className="text-charcoal-500">Validation RMSE</span>
                 <span className="text-emerald-700 font-bold">11.23 cycles</span>
               </div>
-              <div className="flex justify-between py-2 border-b border-slate-100">
-                <span className="text-slate-500">Held-Out Test RMSE</span>
-                <span className="text-slate-900 font-semibold">13.70 cycles</span>
+              <div className="flex justify-between py-2 border-b border-[#F0EFEA]">
+                <span className="text-charcoal-500">Held-Out Test RMSE</span>
+                <span className="text-charcoal-900 font-semibold">13.70 cycles</span>
               </div>
               <div className="flex justify-between py-2">
-                <span className="text-slate-500">NASA Asymmetric PHM Score</span>
+                <span className="text-charcoal-500">NASA Asymmetric PHM Score</span>
                 <span className="text-blue-700 font-bold">279.0</span>
               </div>
             </div>
           </div>
 
-          <div className="p-3.5 bg-slate-50 rounded-lg border border-slate-200 text-xs text-slate-600 font-mono mt-4">
-            Dual Isolation Forest + PCA reconstruction error tracks residual thermodynamic drift.
+          <div className="p-3.5 bg-[#FAF9F5] rounded-xl border border-[#E5E4DE] text-xs text-charcoal-600 mt-4 leading-relaxed">
+            Dual Isolation Forest + PCA reconstruction error tracks multi-station thermodynamic drift.
           </div>
         </div>
       </div>
 
       {/* ==================================================================== */}
-      {/* SECTION B: REAL-TIME MACHINE TELEMETRY & MONITORING MATRIX           */}
+      {/* 4. REAL-TIME TURBOFAN MONITORING MATRIX                              */}
       {/* ==================================================================== */}
-      <div className="bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-xs">
-        <div className="p-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white border border-[#E5E4DE] rounded-2xl overflow-hidden shadow-bento">
+        <div className="p-6 border-b border-[#E5E4DE] flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center space-x-2.5">
-              <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">
+              <h3 className="text-xl font-bold text-charcoal-900 tracking-tight font-sans">
                 Turbofan Fleet Monitoring Matrix
               </h3>
-              <span className="text-xs font-mono text-slate-500 font-medium">
+              <span className="text-xs text-charcoal-500 font-medium">
                 ({filteredEngines.length} of {fleetData.total_engines} engines)
               </span>
             </div>
-            <p className="text-sm text-slate-500 mt-1">Real-time telemetry, thermodynamic sensor stations, and predicted failure horizon</p>
+            <p className="text-sm text-charcoal-500 mt-1 font-normal">
+              Real-time telemetry, thermodynamic sensor stations, and predicted failure horizons
+            </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            {/* Search Box */}
+            {/* Search Input */}
             <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+              <Search className="w-4 h-4 text-charcoal-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search engine ID..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-slate-50 border border-slate-300 text-sm font-mono rounded-lg pl-9 pr-3.5 py-2 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="bg-[#FAF9F5] border border-[#E5E4DE] text-sm rounded-xl pl-9 pr-3.5 py-2 text-charcoal-800 placeholder-charcoal-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-all"
               />
             </div>
 
-            {/* Risk Filter */}
-            <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-mono">
+            {/* Risk Filter Buttons */}
+            <div className="flex items-center space-x-1 bg-[#FAF9F5] p-1 rounded-xl border border-[#E5E4DE] text-xs">
               {['ALL', 'HIGH', 'MEDIUM', 'LOW'].map((risk) => (
                 <button
                   key={risk}
                   onClick={() => setFilterRisk(risk)}
-                  className={`px-3 py-1.5 rounded-md transition-colors text-xs font-semibold ${
+                  className={`px-3 py-1.5 rounded-lg transition-colors text-xs font-semibold ${
                     filterRisk === risk
-                      ? 'bg-blue-600 text-white shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-[#2563EB] text-white shadow-xs'
+                      : 'text-charcoal-600 hover:text-charcoal-900'
                   }`}
                 >
                   {risk}
@@ -595,17 +600,17 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
                     key={eng.engine_id}
                     onClick={() => handleSelectActiveEngine(eng)}
                     className={`cursor-pointer transition-colors ${
-                      isSelected ? 'bg-blue-50/70 border-l-4 border-l-blue-600' : 'hover:bg-slate-50'
+                      isSelected ? 'bg-blue-50/70 border-l-4 border-l-blue-600' : 'hover:bg-[#FAF9F5]'
                     }`}
                   >
-                    <td className="font-mono font-bold text-slate-900">
+                    <td className="font-bold text-charcoal-900">
                       <div className="flex items-center space-x-2">
-                        <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-blue-600' : 'bg-slate-400'}`}></span>
+                        <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-blue-600' : 'bg-charcoal-300'}`}></span>
                         <span>ENG-{eng.engine_id.toString().padStart(3, '0')}</span>
                       </div>
                     </td>
-                    <td className="font-mono text-slate-700">{eng.current_cycle}</td>
-                    <td className="font-mono font-bold">
+                    <td className="text-charcoal-700">{eng.current_cycle}</td>
+                    <td className="font-bold">
                       <span
                         className={
                           eng.predicted_rul < 25
@@ -618,27 +623,27 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
                         {eng.predicted_rul} cyc
                       </span>
                     </td>
-                    <td className="font-mono text-slate-700">{eng.health_index.toFixed(2)}</td>
+                    <td className="text-charcoal-700">{eng.health_index.toFixed(2)}</td>
                     <td>
                       <StatusBadge status={eng.anomaly_status} size="sm" />
                     </td>
                     <td>
                       <StatusBadge status={eng.risk_level} size="sm" />
                     </td>
-                    <td className="font-mono text-xs text-slate-600">{eng.sensors.sensor_2?.toFixed(1)} °R</td>
-                    <td className="font-mono text-xs text-slate-600">{eng.sensors.sensor_3?.toFixed(1)} °R</td>
-                    <td className={`font-mono text-xs font-semibold ${eng.sensors.sensor_4 > 1420 ? 'text-rose-600' : 'text-slate-600'}`}>
+                    <td className="text-xs text-charcoal-600">{eng.sensors.sensor_2?.toFixed(1)} °R</td>
+                    <td className="text-xs text-charcoal-600">{eng.sensors.sensor_3?.toFixed(1)} °R</td>
+                    <td className={`text-xs font-semibold ${eng.sensors.sensor_4 > 1420 ? 'text-rose-600' : 'text-charcoal-600'}`}>
                       {eng.sensors.sensor_4?.toFixed(1)} °R
                     </td>
-                    <td className="font-mono text-xs text-slate-600">{eng.sensors.sensor_7?.toFixed(1)} psia</td>
-                    <td className="font-mono text-xs text-slate-600">{eng.sensors.sensor_9?.toFixed(0)} rpm</td>
+                    <td className="text-xs text-charcoal-600">{eng.sensors.sensor_7?.toFixed(1)} psia</td>
+                    <td className="text-xs text-charcoal-600">{eng.sensors.sensor_9?.toFixed(0)} rpm</td>
                     <td className="text-right">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           onSelectEngine(eng.engine_id);
                         }}
-                        className="text-xs font-mono font-semibold text-blue-600 hover:text-blue-800 inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 transition-colors shadow-xs"
+                        className="text-xs font-semibold text-blue-600 hover:text-blue-800 inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#FAF9F5] hover:bg-[#EAE9E4] transition-colors border border-[#E5E4DE] shadow-xs"
                       >
                         <span>Inspect</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -651,37 +656,37 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
           </table>
         </div>
 
-        <div className="p-4 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center font-mono">
+        <div className="p-4 bg-[#FAF9F5] border-t border-[#E5E4DE] text-xs text-charcoal-500 flex justify-between items-center font-sans">
           <span>Showing 15 of {filteredEngines.length} matching engines</span>
           <span className="font-semibold text-blue-600">CLICK ANY ROW TO PREVIEW IN DIGITAL TWIN</span>
         </div>
       </div>
 
       {/* ==================================================================== */}
-      {/* SECTION F: ACTIVE ALERTS & INCIDENT STREAM                           */}
+      {/* 5. ACTIVE OPERATIONAL ALERTS STREAM                                  */}
       {/* ==================================================================== */}
-      <div className="bg-white border border-slate-200/90 rounded-xl p-6 shadow-xs">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-5">
+      <div className="bg-white border border-[#E5E4DE] rounded-2xl p-6 shadow-bento">
+        <div className="flex items-center justify-between pb-4 border-b border-[#E5E4DE] mb-5">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-rose-50 rounded-lg border border-rose-200 text-rose-600">
+            <div className="p-2.5 bg-amber-50 rounded-xl border border-amber-200 text-amber-600">
               <Bell className="w-5 h-5 animate-pulse" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">
+              <h3 className="text-xl font-bold text-charcoal-900 tracking-tight font-sans">
                 Active Operational Alerts Stream
               </h3>
-              <p className="text-sm text-slate-500 mt-0.5">
+              <p className="text-sm text-charcoal-500 mt-0.5">
                 Real-time machine notifications triggered by anomaly score thresholds and RUL safety limits
               </p>
             </div>
           </div>
-          <span className="text-xs font-mono font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+          <span className="text-xs font-semibold text-charcoal-700 bg-[#FAF9F5] px-3 py-1 rounded-full border border-[#E5E4DE]">
             {activeAlertsCount} ACTIVE UNRESOLVED
           </span>
         </div>
 
         {alerts.length === 0 ? (
-          <div className="p-8 text-center text-sm font-mono text-slate-500">
+          <div className="p-8 text-center text-sm text-charcoal-500">
             All turbofans operating within nominal parameters. No active alerts.
           </div>
         ) : (
@@ -691,7 +696,7 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
                 key={alert.id}
                 className={`p-4 rounded-xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
                   alert.acknowledged
-                    ? 'bg-slate-50 border-slate-200 opacity-60'
+                    ? 'bg-[#FAF9F5] border-[#E5E4DE] opacity-60'
                     : alert.severity === 'CRITICAL'
                     ? 'bg-rose-50/70 border-rose-200 shadow-xs'
                     : 'bg-amber-50/70 border-amber-200 shadow-xs'
@@ -699,7 +704,7 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
               >
                 <div className="flex items-start space-x-3.5">
                   <div
-                    className={`p-2.5 rounded-lg shrink-0 ${
+                    className={`p-2.5 rounded-xl shrink-0 ${
                       alert.severity === 'CRITICAL' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'
                     }`}
                   >
@@ -707,15 +712,15 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
                   </div>
                   <div>
                     <div className="flex items-center space-x-2.5">
-                      <span className="font-mono font-bold text-sm text-slate-900">
+                      <span className="font-bold text-sm text-charcoal-900">
                         ENG-{alert.engineId.toString().padStart(3, '0')}
                       </span>
                       <StatusBadge status={alert.severity} size="sm" />
-                      <span className="text-xs font-mono text-slate-500">{alert.timestamp}</span>
+                      <span className="text-xs text-charcoal-500">{alert.timestamp}</span>
                     </div>
-                    <p className="text-sm text-slate-800 font-medium mt-1">{alert.trigger}</p>
-                    <p className="text-xs text-slate-600 mt-1">
-                      <span className="font-mono font-semibold text-slate-700">Action:</span> {alert.recommendation}
+                    <p className="text-sm text-charcoal-800 font-medium mt-1">{alert.trigger}</p>
+                    <p className="text-xs text-charcoal-600 mt-1">
+                      <strong className="text-charcoal-800 font-semibold">Action:</strong> {alert.recommendation}
                     </p>
                   </div>
                 </div>
@@ -723,15 +728,15 @@ export const CommandCenter: React.FC<CommandCenterProps> = ({ onSelectEngine, on
                 <div className="flex items-center space-x-2.5 shrink-0 self-end sm:self-center">
                   <button
                     onClick={() => onSelectEngine(alert.engineId)}
-                    className="px-3.5 py-1.5 text-xs font-mono font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg border border-slate-300 transition-colors shadow-xs"
+                    className="px-3.5 py-1.5 text-xs font-semibold bg-white hover:bg-[#FAF9F5] text-charcoal-700 rounded-xl border border-[#E5E4DE] transition-colors shadow-xs"
                   >
                     Investigate
                   </button>
                   <button
                     onClick={() => toggleAlertAck(alert.id)}
-                    className={`px-3.5 py-1.5 text-xs font-mono font-semibold rounded-lg border flex items-center space-x-1.5 transition-colors shadow-xs ${
+                    className={`px-3.5 py-1.5 text-xs font-semibold rounded-xl border flex items-center space-x-1.5 transition-colors shadow-xs ${
                       alert.acknowledged
-                        ? 'bg-slate-100 text-slate-500 border-slate-200'
+                        ? 'bg-[#FAF9F5] text-charcoal-500 border-[#E5E4DE]'
                         : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-300'
                     }`}
                   >
