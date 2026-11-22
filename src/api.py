@@ -121,8 +121,11 @@ def get_fleet_overview():
     if CACHED_FLEET_DATA is not None:
         return CACHED_FLEET_DATA
 
+    # Prefer operational active test fleet where engines are in-service across diverse lifecycle stages
+    active_fleet_file = DATA / "test_FD001.txt"
     train_file = DATA / "train_FD001.txt"
-    if not train_file.exists():
+    fleet_file = active_fleet_file if active_fleet_file.exists() else train_file
+    if not fleet_file.exists():
         raise HTTPException(status_code=404, detail="Dataset not found")
 
     try:
@@ -130,7 +133,7 @@ def get_fleet_overview():
     except Exception as e:
         raise HTTPException(status_code=503, detail=str(e))
 
-    raw = load_train(str(train_file))
+    raw = load_train(str(fleet_file))
     feat = build_features(raw)
     latest_rows = feat.sort_values("cycle").groupby("engine_id").tail(1).reset_index(drop=True)
     raw_latest = raw.sort_values("cycle").groupby("engine_id").tail(1).reset_index(drop=True)
