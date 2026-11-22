@@ -52,20 +52,20 @@ const SUBSYSTEM_DETAILS: Record<
   lpt: {
     name: 'Low Pressure Turbine (LPT)',
     station: 'Station 4.5 – 5.0',
-    role: 'Multi-stage uncooled turbine extracting residual enthalpy to drive the front fan.',
-    primaryFailureMode: 'Thermal fatigue, uncooled blade creep (reflected in T50 sensor rise).',
+    role: 'Extracts downstream gas energy to drive the primary intake fan.',
+    primaryFailureMode: 'Inter-stage seal wear, aerodynamic unbalance, casing clearance growth.',
   },
   casing: {
-    name: 'Nacelle & Bypass Duct Casing',
-    station: 'Station 1.0 – 8.0',
-    role: 'Aerodynamic bypass flow ducting, acoustic treatment, and containment.',
-    primaryFailureMode: 'Acoustic liner delamination, cowl latch fatigue.',
+    name: 'Aerodynamic Nacelle & Core Cowling',
+    station: 'Station Outer Boundary',
+    role: 'Structural bypass containment, acoustic dampening, and aerodynamic streamlining.',
+    primaryFailureMode: 'Acoustic tile delamination, cowl latch fatigue, vibration fretting.',
   },
   exhaust: {
-    name: 'Exhaust Mixer & Tail Plug',
-    station: 'Station 8.0',
-    role: 'Mixes core exhaust with bypass stream to maximize propulsive efficiency.',
-    primaryFailureMode: 'Nozzle thermal distortion, plug vibration.',
+    name: 'Exhaust Nozzle & Centerbody Plug',
+    station: 'Station 8.0 – 9.0',
+    role: 'Core gas acceleration and bypass air mixing for optimal propulsive efficiency.',
+    primaryFailureMode: 'Thermal nozzle distortion, acoustic cracking, aerodynamic drag rise.',
   },
 };
 
@@ -73,27 +73,31 @@ export const DigitalTwinStudio: React.FC = () => {
   const [twinState, setTwinState] = useState<DigitalTwinState | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [simulating, setSimulating] = useState<boolean>(false);
+
+  // Inspector Focus
   const [selectedSubsystem, setSelectedSubsystem] = useState<EngineSubsystemKey>('hpt');
-  
-  // Stress sliders
+
+  // Stress Simulation Parameters
   const [thermalStress, setThermalStress] = useState<number>(1.0);
   const [contamination, setContamination] = useState<number>(1.0);
   const [thrustDerate, setThrustDerate] = useState<number>(0.0);
   const [stepCycles, setStepCycles] = useState<number>(5);
 
-  // Telemetry history for live simulation graph
-  const [historyTelemetry, setHistoryTelemetry] = useState<Array<{ cycle: number; t50: number; t30: number; rul: number }>>([]);
+  // Simulation Telemetry History for chart
+  const [historyTelemetry, setHistoryTelemetry] = useState<
+    Array<{ cycle: number; t50: number; t30: number; rul: number }>
+  >([]);
 
   useEffect(() => {
-    initTwin();
+    initDigitalTwin();
   }, []);
 
-  const initTwin = async () => {
+  const initDigitalTwin = async () => {
     setLoading(true);
     try {
       const state = await api.simulateTwin({
         engine_id: 1,
-        cycles_to_advance: 1,
+        cycles_to_advance: 0,
         thermal_stress: 1.0,
         contamination: 1.0,
         thrust_derate: 0.0,
@@ -162,63 +166,63 @@ export const DigitalTwinStudio: React.FC = () => {
       : 5;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {/* Top Banner KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="dark-panel p-4 border-l-4 border-l-cyan-500">
-          <p className="text-xs font-mono font-medium text-slate-400 uppercase tracking-wider">Simulated Flight Cycle</p>
-          <div className="mt-1 flex items-baseline space-x-2">
-            <span className="text-2xl font-bold font-mono text-white">{twinState.cycle}</span>
-            <span className="text-xs text-slate-400 font-mono">({twinState.flight_hours} hrs)</span>
+        <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs border-l-4 border-l-blue-600">
+          <p className="text-xs font-mono font-semibold text-slate-500 uppercase tracking-wider">Simulated Flight Cycle</p>
+          <div className="mt-1.5 flex items-baseline space-x-2">
+            <span className="text-3xl font-bold font-mono text-slate-900">{twinState.cycle}</span>
+            <span className="text-xs text-slate-500 font-mono">({twinState.flight_hours} hrs)</span>
           </div>
         </div>
 
-        <div className="dark-panel p-4 border-l-4 border-l-emerald-500">
-          <p className="text-xs font-mono font-medium text-slate-400 uppercase tracking-wider">Overall Health Index (HI)</p>
-          <div className="mt-1 flex items-baseline space-x-2">
-            <span className="text-2xl font-bold font-mono text-emerald-400">
+        <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs border-l-4 border-l-emerald-500">
+          <p className="text-xs font-mono font-semibold text-slate-500 uppercase tracking-wider">Overall Health Index (HI)</p>
+          <div className="mt-1.5 flex items-baseline space-x-2">
+            <span className="text-3xl font-bold font-mono text-emerald-700">
               {twinState.overall_health_index.toFixed(2)}
             </span>
-            <span className="text-xs text-slate-400 font-mono">[0.00 – 1.00]</span>
+            <span className="text-xs text-slate-500 font-mono">[0.00 – 1.00]</span>
           </div>
         </div>
 
-        <div className="dark-panel p-4 border-l-4 border-l-blue-500">
-          <p className="text-xs font-mono font-medium text-slate-400 uppercase tracking-wider">Estimated RUL</p>
-          <div className="mt-1 flex items-baseline space-x-2">
-            <span className="text-2xl font-bold font-mono text-white">
+        <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs border-l-4 border-l-blue-500">
+          <p className="text-xs font-mono font-semibold text-slate-500 uppercase tracking-wider">Estimated RUL</p>
+          <div className="mt-1.5 flex items-baseline space-x-2">
+            <span className="text-3xl font-bold font-mono text-slate-900">
               {twinState.live_predictions?.predicted_rul ?? '—'}
             </span>
-            <span className="text-xs text-slate-400 font-mono">cycles remaining</span>
+            <span className="text-xs text-slate-500 font-mono">cycles</span>
           </div>
         </div>
 
-        <div className="dark-panel p-4 border-l-4 border-l-amber-500">
-          <p className="text-xs font-mono font-medium text-slate-400 uppercase tracking-wider">Maintenance Urgency</p>
-          <div className="mt-1 flex items-center space-x-2">
-            <StatusBadge status={twinState.prescriptive_maintenance.urgency} />
+        <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs border-l-4 border-l-amber-500">
+          <p className="text-xs font-mono font-semibold text-slate-500 uppercase tracking-wider">Maintenance Urgency</p>
+          <div className="mt-2 flex items-center space-x-2">
+            <StatusBadge status={twinState.prescriptive_maintenance.urgency} size="lg" />
           </div>
         </div>
       </div>
 
       {/* Main 3D Canvas & Component Inspector */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* 3D Scene Viewport */}
-        <div className="lg:col-span-8 dark-panel p-3 flex flex-col">
-          <div className="p-3 border-b border-slate-800 flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <h3 className="text-sm font-bold text-white font-mono tracking-tight">
+        <div className="lg:col-span-8 bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs flex flex-col justify-between">
+          <div className="pb-4 border-b border-slate-200 flex items-center justify-between">
+            <div className="flex items-center space-x-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <h3 className="text-xl font-bold text-slate-900 font-mono tracking-tight">
                 TURBOFAN CUTAWAY DIGITAL TWIN (STATION VIEW)
               </h3>
             </div>
-            <div className="flex items-center space-x-1.5 text-xs text-slate-400 font-mono">
+            <div className="flex items-center space-x-1.5 text-xs text-slate-500 font-mono">
               <span>SELECTED: </span>
-              <span className="font-semibold text-cyan-400 uppercase">{selectedSubsystem}</span>
+              <span className="font-bold text-blue-600 uppercase">{selectedSubsystem}</span>
             </div>
           </div>
 
-          <div className="h-[480px] w-full rounded overflow-hidden">
+          <div className="h-[490px] w-full rounded-xl overflow-hidden my-4 relative shadow-inner">
             <TurbofanScene
               selectedComponent={selectedSubsystem}
               onSelectComponent={setSelectedSubsystem}
@@ -236,7 +240,7 @@ export const DigitalTwinStudio: React.FC = () => {
           </div>
 
           {/* Subsystem quick-selection pill bar */}
-          <div className="p-3 bg-slate-950/80 border-t border-slate-800 flex flex-wrap gap-1.5">
+          <div className="pt-3 border-t border-slate-200 flex flex-wrap gap-2">
             {[
               { id: 'fan', label: 'Fan & LPC' },
               { id: 'hpc', label: 'HPC Compressor' },
@@ -249,10 +253,10 @@ export const DigitalTwinStudio: React.FC = () => {
               <button
                 key={sub.id}
                 onClick={() => setSelectedSubsystem(sub.id as EngineSubsystemKey)}
-                className={`px-3 py-1 text-xs font-mono rounded transition-colors ${
+                className={`px-3 py-1.5 text-xs font-mono rounded-lg transition-colors font-semibold ${
                   selectedSubsystem === sub.id
-                    ? 'bg-blue-600 text-white font-semibold shadow-xs'
-                    : 'bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800'
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                 }`}
               >
                 {sub.label}
@@ -262,23 +266,23 @@ export const DigitalTwinStudio: React.FC = () => {
         </div>
 
         {/* Selected Component Technical Inspector Panel */}
-        <div className="lg:col-span-4 dark-panel p-5 flex flex-col justify-between">
-          <div className="space-y-4">
-            <div className="pb-3 border-b border-slate-800">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+        <div className="lg:col-span-4 bg-white border border-slate-200/90 rounded-xl p-6 shadow-xs flex flex-col justify-between">
+          <div className="space-y-5">
+            <div className="pb-4 border-b border-slate-200">
+              <span className="text-xs font-mono uppercase tracking-wider text-slate-500 font-bold">
                 COMPONENT DIAGNOSTICS
               </span>
-              <h3 className="text-base font-bold text-white tracking-tight mt-0.5 font-mono">{selectedInfo.name}</h3>
-              <p className="text-xs font-mono text-cyan-400 mt-0.5">{selectedInfo.station}</p>
+              <h3 className="text-lg font-bold text-slate-900 tracking-tight mt-1 font-mono">{selectedInfo.name}</h3>
+              <p className="text-xs font-mono text-blue-600 font-semibold mt-1">{selectedInfo.station}</p>
             </div>
 
             {/* Wear level progress bar */}
             <div>
-              <div className="flex justify-between text-xs mb-1.5 font-mono">
-                <span className="text-slate-400 font-medium">Degradation / Wear Level</span>
-                <span className="font-bold text-white">{currentSubWear}%</span>
+              <div className="flex justify-between text-xs mb-2 font-mono">
+                <span className="text-slate-600 font-semibold">Degradation / Wear Level</span>
+                <span className="font-bold text-slate-900 text-sm">{currentSubWear}%</span>
               </div>
-              <div className="w-full bg-slate-950 rounded-full h-2.5 overflow-hidden border border-slate-800">
+              <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden border border-slate-200">
                 <div
                   className={`h-full rounded-full transition-all duration-300 ${
                     currentSubWear > 65
@@ -292,26 +296,26 @@ export const DigitalTwinStudio: React.FC = () => {
               </div>
             </div>
 
-            <div className="space-y-2.5 text-xs">
-              <div className="p-3 bg-slate-950/70 border border-slate-800/80 rounded">
-                <p className="font-semibold text-slate-200 mb-1 font-mono text-[11px]">Functional Aerodynamic Role:</p>
-                <p className="text-slate-400 leading-relaxed">{selectedInfo.role}</p>
+            <div className="space-y-3 text-sm">
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                <p className="font-semibold text-slate-800 mb-1 font-mono text-xs">Functional Aerodynamic Role:</p>
+                <p className="text-slate-600 text-xs leading-relaxed">{selectedInfo.role}</p>
               </div>
 
-              <div className="p-3 bg-slate-950/70 border border-slate-800/80 rounded">
-                <p className="font-semibold text-slate-200 mb-1 font-mono text-[11px]">Physical Failure Mechanics:</p>
-                <p className="text-slate-400 leading-relaxed">{selectedInfo.primaryFailureMode}</p>
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                <p className="font-semibold text-slate-800 mb-1 font-mono text-xs">Physical Failure Mechanics:</p>
+                <p className="text-slate-600 text-xs leading-relaxed">{selectedInfo.primaryFailureMode}</p>
               </div>
             </div>
           </div>
 
           {/* Prescriptive Advisory Callout */}
-          <div className="mt-4 p-3.5 bg-blue-950/40 border border-blue-800/60 rounded-md">
-            <div className="flex items-center space-x-1.5 text-blue-300 font-semibold text-xs mb-1 font-mono">
-              <Info className="w-4 h-4 text-cyan-400" />
+          <div className="mt-5 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center space-x-2 text-blue-800 font-semibold text-xs mb-1 font-mono">
+              <Info className="w-4 h-4 text-blue-600" />
               <span>Prescriptive Action:</span>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-blue-900 leading-relaxed font-medium">
               {twinState.prescriptive_maintenance.recommendation}
             </p>
           </div>
@@ -319,22 +323,22 @@ export const DigitalTwinStudio: React.FC = () => {
       </div>
 
       {/* What-If Stress Testing Controls & Simulation Timeline */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Stress & Operational Controls */}
-        <div className="lg:col-span-5 dark-panel p-5 space-y-4">
-          <div className="pb-3 border-b border-slate-800">
-            <h3 className="text-sm font-bold text-white tracking-tight font-mono">What-If Operational Stress Lab</h3>
-            <p className="text-xs text-slate-400">Inject operational stresses to simulate accelerated degradation</p>
+        <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-xl p-6 shadow-xs space-y-5">
+          <div className="pb-4 border-b border-slate-200">
+            <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">What-If Operational Stress Lab</h3>
+            <p className="text-sm text-slate-500 mt-1">Inject operational stresses to simulate accelerated degradation</p>
           </div>
 
-          <div className="space-y-3.5">
+          <div className="space-y-4">
             <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-slate-300 font-medium flex items-center space-x-1.5">
-                  <Flame className="w-3.5 h-3.5 text-rose-400" />
+              <div className="flex justify-between text-xs mb-1.5">
+                <span className="text-slate-700 font-semibold flex items-center space-x-1.5">
+                  <Flame className="w-4 h-4 text-rose-500" />
                   <span>Thermal Stress Multiplier</span>
                 </span>
-                <span className="font-mono text-cyan-400 font-bold">{thermalStress.toFixed(1)}x</span>
+                <span className="font-mono text-blue-600 font-bold">{thermalStress.toFixed(1)}x</span>
               </div>
               <input
                 type="range"
@@ -343,18 +347,18 @@ export const DigitalTwinStudio: React.FC = () => {
                 step="0.1"
                 value={thermalStress}
                 onChange={(e) => setThermalStress(parseFloat(e.target.value))}
-                className="w-full accent-blue-600 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+                className="w-full accent-blue-600 h-2 bg-slate-200 rounded-lg cursor-pointer"
               />
-              <span className="text-[10px] text-slate-500 font-mono">1.0 = Nominal • 2.0 = Hot Desert Ambient Takeoff</span>
+              <span className="text-xs text-slate-500 font-mono mt-1 block">1.0 = Nominal • 2.0 = Hot Desert Ambient Takeoff</span>
             </div>
 
             <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-slate-300 font-medium flex items-center space-x-1.5">
-                  <Wind className="w-3.5 h-3.5 text-amber-400" />
+              <div className="flex justify-between text-xs mb-1.5">
+                <span className="text-slate-700 font-semibold flex items-center space-x-1.5">
+                  <Wind className="w-4 h-4 text-amber-500" />
                   <span>Particulate / Sand Contamination</span>
                 </span>
-                <span className="font-mono text-amber-400 font-bold">{contamination.toFixed(1)}x</span>
+                <span className="font-mono text-amber-600 font-bold">{contamination.toFixed(1)}x</span>
               </div>
               <input
                 type="range"
@@ -363,18 +367,18 @@ export const DigitalTwinStudio: React.FC = () => {
                 step="0.1"
                 value={contamination}
                 onChange={(e) => setContamination(parseFloat(e.target.value))}
-                className="w-full accent-blue-600 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+                className="w-full accent-blue-600 h-2 bg-slate-200 rounded-lg cursor-pointer"
               />
-              <span className="text-[10px] text-slate-500 font-mono">Accelerates HPC blade fouling and tip clearance loss</span>
+              <span className="text-xs text-slate-500 font-mono mt-1 block">Accelerates HPC blade fouling and tip clearance loss</span>
             </div>
 
             <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-slate-300 font-medium flex items-center space-x-1.5">
-                  <Shield className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="flex justify-between text-xs mb-1.5">
+                <span className="text-slate-700 font-semibold flex items-center space-x-1.5">
+                  <Shield className="w-4 h-4 text-emerald-600" />
                   <span>Thrust Derating (Life Extension)</span>
                 </span>
-                <span className="font-mono text-emerald-400 font-bold">{(thrustDerate * 100).toFixed(0)}%</span>
+                <span className="font-mono text-emerald-700 font-bold">{(thrustDerate * 100).toFixed(0)}%</span>
               </div>
               <input
                 type="range"
@@ -383,9 +387,9 @@ export const DigitalTwinStudio: React.FC = () => {
                 step="0.05"
                 value={thrustDerate}
                 onChange={(e) => setThrustDerate(parseFloat(e.target.value))}
-                className="w-full accent-blue-600 h-1.5 bg-slate-800 rounded-lg cursor-pointer"
+                className="w-full accent-blue-600 h-2 bg-slate-200 rounded-lg cursor-pointer"
               />
-              <span className="text-[10px] text-slate-500 font-mono">Derated climb throttles core EGT to prolong HPT life</span>
+              <span className="text-xs text-slate-500 font-mono mt-1 block">Derated climb throttles core EGT to prolong HPT life</span>
             </div>
           </div>
 
@@ -393,7 +397,7 @@ export const DigitalTwinStudio: React.FC = () => {
             <select
               value={stepCycles}
               onChange={(e) => setStepCycles(parseInt(e.target.value))}
-              className="text-xs border border-slate-700 rounded px-2.5 py-2 font-mono bg-slate-950 text-slate-200"
+              className="text-xs border border-slate-300 rounded-lg px-3 py-2.5 font-mono bg-slate-50 text-slate-800 font-medium"
             >
               <option value="1">Advance +1 cycle</option>
               <option value="5">Advance +5 cycles</option>
@@ -404,7 +408,7 @@ export const DigitalTwinStudio: React.FC = () => {
             <button
               onClick={() => handleStepSimulation()}
               disabled={simulating}
-              className="flex-1 flex items-center justify-center space-x-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded px-4 py-2 text-xs font-semibold transition-colors disabled:opacity-50"
+              className="flex-1 flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2.5 text-xs font-semibold transition-colors disabled:opacity-50 shadow-xs"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>{simulating ? 'Simulating...' : 'Advance Simulation'}</span>
@@ -412,29 +416,29 @@ export const DigitalTwinStudio: React.FC = () => {
           </div>
 
           {/* Maintenance Action Buttons */}
-          <div className="pt-3 border-t border-slate-800">
-            <p className="text-[10px] font-mono uppercase tracking-wider text-slate-400 mb-2">
+          <div className="pt-4 border-t border-slate-200">
+            <p className="text-xs font-mono uppercase tracking-wider text-slate-500 mb-2.5 font-bold">
               SIMULATE MAINTENANCE ACTIONS
             </p>
-            <div className="grid grid-cols-3 gap-2 text-xs font-medium">
+            <div className="grid grid-cols-3 gap-2.5 text-xs font-semibold">
               <button
                 onClick={() => handleStepSimulation('compressor_wash')}
                 disabled={simulating}
-                className="p-2 border border-slate-700 bg-slate-950 hover:bg-slate-850 rounded text-center text-slate-300 transition-colors"
+                className="p-2.5 border border-slate-300 bg-slate-50 hover:bg-slate-100 rounded-lg text-center text-slate-700 transition-colors shadow-xs"
               >
                 🧼 Core Wash
               </button>
               <button
                 onClick={() => handleStepSimulation('hot_section_inspection')}
                 disabled={simulating}
-                className="p-2 border border-slate-700 bg-slate-950 hover:bg-slate-850 rounded text-center text-slate-300 transition-colors"
+                className="p-2.5 border border-slate-300 bg-slate-50 hover:bg-slate-100 rounded-lg text-center text-slate-700 transition-colors shadow-xs"
               >
                 🔧 Blade Repair
               </button>
               <button
                 onClick={() => handleStepSimulation('major_overhaul')}
                 disabled={simulating}
-                className="p-2 border border-slate-700 bg-slate-950 hover:bg-slate-850 rounded text-center text-slate-300 transition-colors"
+                className="p-2.5 border border-slate-300 bg-slate-50 hover:bg-slate-100 rounded-lg text-center text-slate-700 transition-colors shadow-xs"
               >
                 🔄 Overhaul
               </button>
@@ -443,49 +447,50 @@ export const DigitalTwinStudio: React.FC = () => {
         </div>
 
         {/* Live Simulation Telemetry & Degradation Trajectory Chart */}
-        <div className="lg:col-span-7 dark-panel p-5 flex flex-col justify-between">
+        <div className="lg:col-span-7 bg-white border border-slate-200/90 rounded-xl p-6 shadow-xs flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-200 mb-4">
               <div>
-                <h3 className="text-sm font-bold text-white tracking-tight font-mono">
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">
                   Simulated Degradation Trajectory (EGT & RUL Response)
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-sm text-slate-500 mt-1">
                   Live response of LPT exhaust gas temperature (T50) & predicted remaining life
                 </p>
               </div>
-              <Activity className="w-4 h-4 text-cyan-400" />
+              <Activity className="w-5 h-5 text-blue-600" />
             </div>
 
-            <div className="h-64 w-full">
+            <div className="h-72 w-full pt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={historyTelemetry} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                  <XAxis dataKey="cycle" tick={{ fontSize: 11, fill: '#94a3b8' }} />
-                  <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} domain={['auto', 'auto']} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis dataKey="cycle" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={{ stroke: '#cbd5e1' }} />
+                  <YAxis tick={{ fontSize: 12, fill: '#64748b' }} axisLine={{ stroke: '#cbd5e1' }} domain={['auto', 'auto']} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#0B132B',
-                      borderColor: '#1e293b',
-                      borderRadius: '6px',
-                      color: '#fff',
-                      fontSize: '12px',
+                      backgroundColor: '#ffffff',
+                      borderColor: '#cbd5e1',
+                      borderRadius: '8px',
+                      color: '#0f172a',
+                      fontSize: '13px',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                     }}
                   />
                   <Line
                     type="monotone"
                     dataKey="t50"
-                    stroke="#f43f5e"
-                    strokeWidth={2}
-                    dot={{ r: 2 }}
+                    stroke="#e11d48"
+                    strokeWidth={2.5}
+                    dot={{ r: 3 }}
                     name="LPT Temp T50 (°R)"
                   />
                   <Line
                     type="monotone"
                     dataKey="rul"
-                    stroke="#38bdf8"
-                    strokeWidth={2}
-                    dot={{ r: 2 }}
+                    stroke="#2563eb"
+                    strokeWidth={2.5}
+                    dot={{ r: 3 }}
                     name="Predicted RUL (cycles)"
                   />
                 </LineChart>
@@ -493,7 +498,7 @@ export const DigitalTwinStudio: React.FC = () => {
             </div>
           </div>
 
-          <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+          <div className="pt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500 font-mono">
             <span>LIVE INFERENCE: ACTIVE</span>
             <span>MODEL: XGBOOST REGRESSOR (ZERO LEAKAGE)</span>
           </div>

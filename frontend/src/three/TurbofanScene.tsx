@@ -51,16 +51,16 @@ export const TurbofanScene: React.FC<TurbofanSceneProps> = ({
   };
 
   return (
-    <div className="w-full h-full relative overflow-hidden bg-gradient-to-b from-[#0B132B]/90 via-[#0B0F19] to-[#070A10] rounded-lg border border-slate-800 shadow-xl">
+    <div className="w-full h-full relative overflow-hidden bg-gradient-to-b from-slate-100 via-slate-150 to-slate-200/90 rounded-xl border border-slate-300 shadow-sm">
       <Canvas shadows gl={{ antialias: true, alpha: true }}>
         <PerspectiveCamera makeDefault position={[3.8, 2.2, 4.2]} fov={40} />
 
-        {/* Industrial aerospace control-room lighting */}
-        <ambientLight intensity={0.7} />
-        <directionalLight position={[6, 9, 5]} intensity={1.4} castShadow color="#ffffff" />
-        <directionalLight position={[-6, 4, -4]} intensity={0.7} color="#38bdf8" />
-        <directionalLight position={[0, -4, 0]} intensity={0.3} color="#64748b" />
-        <pointLight position={[0, 0.2, -1.5]} intensity={1.5} color={thermalStress > 1.3 ? '#f97316' : '#38bdf8'} distance={4} />
+        {/* Industrial aerospace clean studio lighting */}
+        <ambientLight intensity={0.9} />
+        <directionalLight position={[6, 9, 5]} intensity={1.5} castShadow color="#ffffff" />
+        <directionalLight position={[-6, 4, -4]} intensity={0.8} color="#93c5fd" />
+        <directionalLight position={[0, -4, 0]} intensity={0.4} color="#94a3b8" />
+        <pointLight position={[0, 0.2, -1.5]} intensity={1.6} color={thermalStress > 1.3 ? '#f97316' : '#0284c7'} distance={4} />
 
         <Suspense fallback={null}>
           <TurbofanCutawayModel
@@ -75,7 +75,7 @@ export const TurbofanScene: React.FC<TurbofanSceneProps> = ({
           {/* Technical circular ground reflection ring */}
           <mesh position={[0, -1.8, -0.3]} rotation={[-Math.PI / 2, 0, 0]}>
             <ringGeometry args={[1.8, 4.2, 64]} />
-            <meshStandardMaterial color="#0f172a" transparent opacity={0.4} roughness={0.8} />
+            <meshStandardMaterial color="#94a3b8" transparent opacity={0.25} roughness={0.7} />
           </mesh>
         </Suspense>
 
@@ -93,32 +93,32 @@ export const TurbofanScene: React.FC<TurbofanSceneProps> = ({
       </Canvas>
 
       {/* Camera View Switcher Buttons */}
-      <div className="absolute top-3 right-3 flex items-center space-x-1.5 bg-slate-900/80 backdrop-blur-md border border-slate-700/60 p-1 rounded-md text-[10px] font-mono text-slate-300 z-10">
-        <span className="text-slate-400 px-1 hidden sm:inline">VIEW:</span>
+      <div className="absolute top-3 right-3 flex items-center space-x-1.5 bg-white/90 backdrop-blur-md border border-slate-300 p-1.5 rounded-lg text-xs font-mono text-slate-700 shadow-xs z-10">
+        <span className="text-slate-500 px-1 font-semibold hidden sm:inline">VIEW:</span>
         <button
           onClick={() => setCameraView('iso')}
-          className="px-2 py-0.5 rounded hover:bg-slate-800 transition-colors"
+          className="px-2.5 py-1 rounded hover:bg-slate-100 font-semibold text-slate-800 transition-colors"
           title="Isometric View"
         >
           ISO
         </button>
         <button
           onClick={() => setCameraView('side')}
-          className="px-2 py-0.5 rounded hover:bg-slate-800 transition-colors"
+          className="px-2.5 py-1 rounded hover:bg-slate-100 font-semibold text-slate-800 transition-colors"
           title="Side Profile"
         >
           SIDE
         </button>
         <button
           onClick={() => setCameraView('front')}
-          className="px-2 py-0.5 rounded hover:bg-slate-800 transition-colors"
+          className="px-2.5 py-1 rounded hover:bg-slate-100 font-semibold text-slate-800 transition-colors"
           title="Front Intake Fan"
         >
           INLET
         </button>
         <button
           onClick={() => setCameraView('turbine')}
-          className="px-2 py-0.5 rounded hover:bg-slate-800 transition-colors"
+          className="px-2.5 py-1 rounded hover:bg-slate-100 font-semibold text-slate-800 transition-colors"
           title="Turbine Hot Section"
         >
           CORE
@@ -126,31 +126,25 @@ export const TurbofanScene: React.FC<TurbofanSceneProps> = ({
       </div>
 
       {/* Engineering CAD Legend */}
-      <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md border border-slate-700/60 px-2.5 py-1.5 rounded text-[11px] font-mono text-slate-300 flex items-center space-x-2 pointer-events-none select-none">
-        <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-        <span>AEROTWIN-3D // C-MAPSS HIGH-BYPASS DUAL-SPOOL</span>
+      <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md border border-slate-300 px-3 py-1.5 rounded-lg text-xs font-mono text-slate-700 flex items-center space-x-2 pointer-events-none select-none shadow-xs">
+        <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+        <span className="font-semibold text-slate-800">AEROTWIN-3D // C-MAPSS HIGH-BYPASS DUAL-SPOOL</span>
       </div>
 
       {/* Selected Component Indicator Overlay */}
       {selectedComponent && (
-        <div className="absolute bottom-3 left-3 bg-slate-900/90 backdrop-blur-md border border-slate-700/80 px-3 py-2 rounded-md text-xs font-mono text-slate-200 pointer-events-none select-none shadow-lg">
-          <div className="flex items-center space-x-2 text-cyan-400 font-bold uppercase text-[11px]">
-            <Crosshair className="w-3.5 h-3.5" />
+        <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md border border-slate-300 px-3.5 py-2 rounded-lg text-xs font-mono text-slate-800 pointer-events-none select-none shadow-sm">
+          <div className="flex items-center space-x-2 text-blue-700 font-bold uppercase">
+            <Crosshair className="w-4 h-4 text-blue-600" />
             <span>ACTIVE FOCUS: {selectedComponent.toUpperCase()}</span>
           </div>
-          <div className="text-[10px] text-slate-400 mt-0.5">
-            Wear Level:{' '}
-            <span className="text-white font-semibold">
-              {subsystemsWear && (subsystemsWear as any)[selectedComponent] !== undefined
-                ? `${(subsystemsWear as any)[selectedComponent]}%`
-                : 'Nominal'}
-            </span>
-          </div>
+          <p className="text-xs text-slate-500 mt-0.5">Click component directly or select subsystem tab</p>
         </div>
       )}
 
-      <div className="absolute bottom-3 right-3 bg-slate-900/80 backdrop-blur-md border border-slate-700/60 px-2.5 py-1.5 rounded text-[10px] font-mono text-slate-400 pointer-events-none select-none hidden sm:block">
-        DRAG TO ROTATE • SCROLL TO ZOOM • CLICK TO HIGHLIGHT
+      {/* Subtle Hint */}
+      <div className="absolute bottom-3 right-3 text-[11px] font-mono text-slate-600 bg-white/90 backdrop-blur-xs px-2.5 py-1 rounded-md border border-slate-300 pointer-events-none select-none shadow-xs">
+        Rotate: Left-Click • Pan: Right-Click • Zoom: Scroll
       </div>
     </div>
   );

@@ -40,24 +40,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, apiCo
   ];
 
   return (
-    <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col shrink-0 select-none">
+    <aside className="w-68 bg-white border-r border-slate-200 flex flex-col shrink-0 select-none shadow-xs">
       {/* Brand & Logo */}
-      <div className="h-16 flex items-center px-6 border-b border-slate-800/80 bg-slate-950/60">
+      <div className="h-18 flex items-center px-6 border-b border-slate-200 bg-white">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-md bg-blue-600 flex items-center justify-center text-white shadow-xs">
+          <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-xs">
             <Layers className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-sm font-bold text-white tracking-wider font-mono">AEROTWIN AI</h1>
-            <p className="text-[10px] text-slate-400 font-mono tracking-tight">PREDICTIVE PLATFORM</p>
+            <h1 className="text-base font-bold text-slate-900 tracking-wider font-mono">AEROTWIN AI</h1>
+            <p className="text-xs text-slate-500 font-mono tracking-tight font-medium">PREDICTIVE PLATFORM</p>
           </div>
         </div>
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+      <nav className="flex-1 py-5 px-3.5 space-y-1.5 overflow-y-auto">
         <div className="px-3 pb-2">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold">
+          <span className="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">
             ENGINEERING MODULES
           </span>
         </div>
@@ -68,16 +68,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, apiCo
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-md text-xs font-medium transition-all duration-150 text-left ${
+              className={`w-full flex items-center space-x-3 px-3.5 py-3 rounded-lg text-sm font-medium transition-all duration-150 text-left ${
                 isActive
-                  ? 'bg-blue-600/90 text-white shadow-xs'
-                  : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                  ? 'bg-blue-600 text-white shadow-xs font-semibold'
+                  : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+              <Icon className={`w-4.5 h-4.5 ${isActive ? 'text-white' : 'text-slate-500'}`} />
               <span className="flex-1">{item.label}</span>
               {item.highlight && !isActive && (
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
               )}
             </button>
           );
@@ -85,22 +85,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, apiCo
       </nav>
 
       {/* Backend Operational Status Footer */}
-      <div className="p-4 border-t border-slate-800 bg-slate-950/40">
-        <div className="bg-slate-900/90 rounded border border-slate-800 p-3">
+      <div className="p-4 border-t border-slate-200 bg-slate-50">
+        <div className="bg-white rounded-lg border border-slate-200 p-3 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono text-slate-400">FASTAPI SERVER</span>
+            <span className="text-xs font-mono text-slate-600 font-medium">FASTAPI SERVER</span>
             <span
-              className={`inline-flex items-center text-[10px] font-mono font-semibold px-2 py-0.5 rounded ${
-                apiConnected ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
+              className={`inline-flex items-center text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full ${
+                apiConnected ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
               }`}
             >
               <span
-                className={`w-1.5 h-1.5 rounded-full mr-1.5 ${apiConnected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'}`}
+                className={`w-2 h-2 rounded-full mr-1.5 ${apiConnected ? 'bg-emerald-500' : 'bg-rose-500'}`}
               />
               {apiConnected ? 'ONLINE' : 'CONNECTING'}
             </span>
           </div>
-          <p className="text-[10px] text-slate-400 mt-1 font-mono">PORT 8000 • C-MAPSS FD001</p>
         </div>
       </div>
     </aside>

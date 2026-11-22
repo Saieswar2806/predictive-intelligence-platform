@@ -43,7 +43,7 @@ export const AnomalyIntelligence: React.FC = () => {
   }
 
   if (!fleetData) {
-    return <div className="text-rose-400 font-mono text-sm p-4">Failed to load anomaly telemetry.</div>;
+    return <div className="text-rose-600 font-mono text-sm p-4 bg-rose-50 border border-rose-200 rounded-lg">Failed to load anomaly telemetry.</div>;
   }
 
   const anomalousEngines = fleetData.engines.filter((e) => {
@@ -68,7 +68,7 @@ export const AnomalyIntelligence: React.FC = () => {
   const normalCount = fleetData.engines.filter((e) => e.anomaly_status === 'Normal').length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {/* KPI Overview */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
@@ -102,11 +102,11 @@ export const AnomalyIntelligence: React.FC = () => {
       </div>
 
       {/* Anomaly Inspection Matrix */}
-      <div className="dark-panel overflow-hidden">
-        <div className="p-5 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-xs">
+        <div className="p-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h3 className="text-sm font-bold text-white tracking-tight font-mono">Fleet Anomaly Status Table</h3>
-            <p className="text-xs text-slate-400">
+            <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">Fleet Anomaly Status Table</h3>
+            <p className="text-sm text-slate-500 mt-1">
               Evaluates multivariate sensor covariance against pristine baseline distributions (Cycles 1–25)
             </p>
           </div>
@@ -114,18 +114,18 @@ export const AnomalyIntelligence: React.FC = () => {
           <div className="flex items-center space-x-3">
             {/* Search Input */}
             <div className="relative">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search Engine ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-8 pr-3 py-1.5 text-xs border border-slate-700 rounded font-mono bg-slate-950 text-white w-44 focus:outline-none focus:border-cyan-500"
+                className="pl-9 pr-3.5 py-2 text-sm border border-slate-300 rounded-lg font-mono bg-slate-50 text-slate-800 w-48 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               />
             </div>
 
             {/* Filter Buttons */}
-            <div className="flex items-center space-x-1 bg-slate-950 p-1 rounded border border-slate-800 text-xs font-mono">
+            <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-mono">
               {[
                 { id: 'ALL', label: 'All' },
                 { id: 'ANOMALIES_ONLY', label: 'Anomalies' },
@@ -135,10 +135,10 @@ export const AnomalyIntelligence: React.FC = () => {
                 <button
                   key={f.id}
                   onClick={() => setFilterSeverity(f.id)}
-                  className={`px-2.5 py-1 rounded transition-colors text-[11px] ${
+                  className={`px-3 py-1.5 rounded-md transition-colors text-xs font-semibold ${
                     filterSeverity === f.id
-                      ? 'bg-blue-600 text-white font-semibold shadow-xs'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'bg-blue-600 text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   {f.label}
@@ -164,11 +164,11 @@ export const AnomalyIntelligence: React.FC = () => {
             </thead>
             <tbody>
               {anomalousEngines.map((eng) => (
-                <tr key={eng.engine_id} className="hover:bg-slate-800/40 transition-colors">
-                  <td className="font-mono font-bold text-white">
+                <tr key={eng.engine_id} className="hover:bg-slate-50 transition-colors">
+                  <td className="font-mono font-bold text-slate-900">
                     ENG-{eng.engine_id.toString().padStart(3, '0')}
                   </td>
-                  <td className="font-mono text-slate-300">{eng.current_cycle}</td>
+                  <td className="font-mono text-slate-700">{eng.current_cycle}</td>
                   <td>
                     <StatusBadge status={eng.anomaly_status} size="sm" />
                   </td>
@@ -176,34 +176,34 @@ export const AnomalyIntelligence: React.FC = () => {
                     <span
                       className={
                         eng.health_index < 0.35
-                          ? 'text-rose-400 font-bold'
+                          ? 'text-rose-600 font-bold'
                           : eng.health_index < 0.7
-                          ? 'text-amber-400'
-                          : 'text-emerald-400'
+                          ? 'text-amber-600'
+                          : 'text-emerald-700'
                       }
                     >
                       {eng.health_index.toFixed(2)}
                     </span>
                   </td>
-                  <td className="font-mono text-slate-200">{eng.predicted_rul} cycles</td>
-                  <td className="font-mono text-xs text-slate-400">
+                  <td className="font-mono text-slate-800 font-medium">{eng.predicted_rul} cycles</td>
+                  <td className="font-mono text-xs text-slate-600">
                     {eng.anomaly_status === 'Critical Anomaly'
                       ? 'T50 (+18.4°R), Nc (+72 rpm), Ps30 (+1.2)'
                       : eng.anomaly_status === 'Warning Deviation'
                       ? 'T30 (+8.2°R), phi (-2.1)'
                       : 'Nominal baseline envelope'}
                   </td>
-                  <td className="font-mono text-xs text-slate-400">
+                  <td className="font-mono text-xs text-slate-600">
                     {eng.anomaly_status !== 'Normal' ? 'Elevated (0.34)' : 'Nominal (0.04)'}
                   </td>
                   <td>
                     <span
-                      className={`text-xs font-mono font-medium px-2 py-0.5 rounded border ${
+                      className={`text-xs font-mono font-semibold px-2.5 py-1 rounded-full border ${
                         eng.anomaly_status === 'Critical Anomaly'
-                          ? 'bg-rose-950/80 text-rose-300 border-rose-800/60 font-semibold'
+                          ? 'bg-rose-50 text-rose-800 border-rose-300'
                           : eng.anomaly_status === 'Warning Deviation'
-                          ? 'bg-amber-950/80 text-amber-300 border-amber-800/60'
-                          : 'text-slate-400 border-slate-800'
+                          ? 'bg-amber-50 text-amber-800 border-amber-300'
+                          : 'text-slate-600 border-slate-200'
                       }`}
                     >
                       {eng.anomaly_status === 'Critical Anomaly'
@@ -219,25 +219,25 @@ export const AnomalyIntelligence: React.FC = () => {
           </table>
         </div>
 
-        <div className="p-3 bg-slate-950/80 border-t border-slate-800 text-xs text-slate-400 flex justify-between items-center font-mono">
+        <div className="p-4 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center font-mono">
           <span>Showing {anomalousEngines.length} matching turbofans</span>
-          <span>CALIBRATION: PRISTINE BASELINE PHASE (CYCLES 1-25)</span>
+          <span className="font-semibold text-blue-600">CALIBRATION: PRISTINE BASELINE PHASE (CYCLES 1-25)</span>
         </div>
       </div>
 
       {/* Anomaly Detection Methodology Card */}
-      <div className="p-4 bg-slate-900/60 border border-slate-800 rounded-lg text-xs text-slate-300 space-y-2 font-mono">
-        <div className="flex items-center space-x-2 font-bold text-white">
-          <Info className="w-4 h-4 text-cyan-400" />
+      <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 space-y-3 font-mono shadow-xs">
+        <div className="flex items-center space-x-2.5 font-bold text-slate-900 text-base">
+          <Info className="w-5 h-5 text-blue-600" />
           <span>Dual-Engine Anomaly Detection & Calibration Architecture</span>
         </div>
-        <p className="leading-relaxed text-slate-400">
-          <strong className="text-slate-200">Pristine Health Manifold:</strong> Traditional anomaly models trained on the entire run-to-failure lifecycle
+        <p className="leading-relaxed text-slate-600 text-xs">
+          <strong className="text-slate-800 font-bold">Pristine Health Manifold:</strong> Traditional anomaly models trained on the entire run-to-failure lifecycle
           suffer from label contamination. Our detector trains its Isolation Forest and PCA subspace projection strictly on
           the first 25 cycles of training engines where engines are known to be 100% defect-free.
         </p>
-        <p className="leading-relaxed text-slate-400">
-          <strong className="text-slate-200">Dynamic Percentile Thresholds:</strong> The warning threshold is calibrated at the 10th percentile (
+        <p className="leading-relaxed text-slate-600 text-xs">
+          <strong className="text-slate-800 font-bold">Dynamic Percentile Thresholds:</strong> The warning threshold is calibrated at the 10th percentile (
           <code>score = 0.0281</code>) and the critical threshold at the 2nd percentile (<code>score = -0.0073</code>).
           Scores falling below the critical threshold indicate irreversible multi-channel thermodynamic divergence.
         </p>

@@ -50,9 +50,9 @@ export const ModelEvaluation: React.FC = () => {
 
   if (error || !benchmarks) {
     return (
-      <div className="bg-rose-950/60 border border-rose-800/80 text-rose-200 p-6 rounded-lg text-sm dark-panel">
-        <h3 className="font-bold text-rose-300 mb-1">Benchmark Loading Error</h3>
-        <p className="text-xs text-rose-300">{error || 'Unable to retrieve benchmarks'}</p>
+      <div className="bg-rose-50 border border-rose-200 text-rose-800 p-6 rounded-xl text-sm font-mono shadow-xs">
+        <h3 className="font-bold text-rose-900 text-base mb-1">Benchmark Loading Error</h3>
+        <p className="text-sm text-rose-700">{error || 'Unable to retrieve benchmarks'}</p>
       </div>
     );
   }
@@ -76,7 +76,7 @@ export const ModelEvaluation: React.FC = () => {
   }, null as { name: string; data: any } | null);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {/* Top Banner KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
@@ -110,12 +110,12 @@ export const ModelEvaluation: React.FC = () => {
       </div>
 
       {/* Benchmark Comparison Table */}
-      <div className="dark-panel overflow-hidden">
-        <div className="p-5 border-b border-slate-800">
-          <h3 className="text-sm font-bold text-white tracking-tight font-mono">
+      <div className="bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-xs">
+        <div className="p-6 border-b border-slate-200">
+          <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">
             Comprehensive Model Benchmarking Suite (NASA C-MAPSS FD001)
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-sm text-slate-500 mt-1">
             Engine-wise validation selection vs held-out test set (100 independent turbofan engines at their final operational cycle)
           </p>
         </div>
@@ -140,28 +140,28 @@ export const ModelEvaluation: React.FC = () => {
                 return (
                   <tr
                     key={name}
-                    className={`hover:bg-slate-800/40 transition-colors ${isSelected ? 'bg-cyan-950/30' : ''}`}
+                    className={`hover:bg-slate-50 transition-colors ${isSelected ? 'bg-blue-50/70' : ''}`}
                   >
-                    <td className="font-semibold text-white flex items-center space-x-2">
+                    <td className="font-semibold text-slate-900 flex items-center space-x-2">
                       <span>{name}</span>
                       {isSelected && (
-                        <span className="text-[10px] bg-blue-600 text-white font-mono px-1.5 py-0.5 rounded font-bold">
+                        <span className="text-xs bg-blue-600 text-white font-mono px-2 py-0.5 rounded-full font-bold shadow-xs">
                           PRODUCTION
                         </span>
                       )}
                     </td>
-                    <td className="font-mono text-cyan-400 font-semibold">{data.validation.RMSE.toFixed(2)}</td>
-                    <td className="font-mono text-slate-300">{data.validation.MAE.toFixed(2)}</td>
-                    <td className="font-mono font-bold text-white">{data.test.RMSE.toFixed(2)}</td>
-                    <td className="font-mono font-bold text-white">{data.test.MAE.toFixed(2)}</td>
-                    <td className="font-mono text-slate-300">{data.test.R2.toFixed(3)}</td>
-                    <td className="font-mono font-bold text-cyan-400">{data.test.NASA_PHM_Score.toFixed(1)}</td>
+                    <td className="font-mono text-blue-600 font-semibold">{data.validation.RMSE.toFixed(2)}</td>
+                    <td className="font-mono text-slate-700">{data.validation.MAE.toFixed(2)}</td>
+                    <td className="font-mono font-bold text-slate-900">{data.test.RMSE.toFixed(2)}</td>
+                    <td className="font-mono font-bold text-slate-900">{data.test.MAE.toFixed(2)}</td>
+                    <td className="font-mono text-slate-700">{data.test.R2.toFixed(3)}</td>
+                    <td className="font-mono font-bold text-blue-700">{data.test.NASA_PHM_Score.toFixed(1)}</td>
                     <td>
                       <span
-                        className={`text-xs font-mono font-medium px-2 py-0.5 rounded border ${
+                        className={`text-xs font-mono font-semibold px-2.5 py-1 rounded-full border ${
                           isSelected
-                            ? 'bg-emerald-950/80 text-emerald-400 border-emerald-800/60'
-                            : 'bg-slate-800/80 text-slate-400 border-slate-700/60'
+                            ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                            : 'bg-slate-100 text-slate-600 border-slate-200'
                         }`}
                       >
                         {isSelected ? 'Active Model' : 'Candidate'}
@@ -178,98 +178,84 @@ export const ModelEvaluation: React.FC = () => {
       {/* Side-by-Side Visual Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Test RMSE Comparison Chart */}
-        <div className="dark-panel p-5">
-          <div className="pb-3 border-b border-slate-800 mb-3">
-            <h3 className="text-sm font-bold text-white tracking-tight font-mono">
+        <div className="bg-white border border-slate-200/90 rounded-xl p-6 shadow-xs">
+          <div className="pb-4 border-b border-slate-200 mb-4">
+            <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">
               Validation vs Test RMSE Comparison (Lower is Better)
             </h3>
-            <p className="text-xs text-slate-400">Root Mean Squared Error on validation split and held-out test engines</p>
+            <p className="text-sm text-slate-500 mt-1">Root Mean Squared Error on validation split and held-out test engines</p>
           </div>
 
-          <div className="h-64 w-full">
+          <div className="h-72 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 25 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                 <XAxis
                   dataKey="name"
-                  tick={{ fontSize: 10, fill: '#94a3b8' }}
+                  tick={{ fontSize: 11, fill: '#64748b' }}
+                  axisLine={{ stroke: '#cbd5e1' }}
                   angle={-15}
                   textAnchor="end"
                   interval={0}
                 />
-                <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} domain={[0, 22]} />
+                <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={{ stroke: '#cbd5e1' }} domain={[0, 22]} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0B132B',
-                    borderColor: '#1e293b',
-                    borderRadius: '6px',
-                    color: '#fff',
+                    backgroundColor: '#ffffff',
+                    borderColor: '#cbd5e1',
+                    borderRadius: '8px',
+                    color: '#0f172a',
                     fontSize: '12px',
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                   }}
                 />
-                <Bar dataKey="valRmse" fill="#0284c7" radius={[4, 4, 0, 0]} name="Val RMSE (cycles)" />
-                <Bar dataKey="testRmse" fill="#38bdf8" radius={[4, 4, 0, 0]} name="Test RMSE (cycles)" />
+                <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
+                <Bar dataKey="valRmse" fill="#2563eb" name="Validation RMSE" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="testRmse" fill="#64748b" name="Held-Out Test RMSE" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* NASA PHM Challenge Score Chart */}
-        <div className="dark-panel p-5">
-          <div className="pb-3 border-b border-slate-800 mb-3">
-            <h3 className="text-sm font-bold text-white tracking-tight font-mono">
-              NASA PHM Asymmetric Penalty Score (Lower is Better)
+        {/* NASA PHM Asymmetric Metric Comparison Chart */}
+        <div className="bg-white border border-slate-200/90 rounded-xl p-6 shadow-xs">
+          <div className="pb-4 border-b border-slate-200 mb-4">
+            <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">
+              NASA PHM Challenge Score (Penalty Asymmetry)
             </h3>
-            <p className="text-xs text-slate-400">
-              Heavily penalizes over-optimistic late predictions (risk of in-flight failure)
+            <p className="text-sm text-slate-500 mt-1">
+              Late predictions (underestimating degradation) receive exponential penalty vs early alerts
             </p>
           </div>
 
-          <div className="h-64 w-full">
+          <div className="h-72 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 25 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
                 <XAxis
                   dataKey="name"
-                  tick={{ fontSize: 10, fill: '#94a3b8' }}
+                  tick={{ fontSize: 11, fill: '#64748b' }}
+                  axisLine={{ stroke: '#cbd5e1' }}
                   angle={-15}
                   textAnchor="end"
                   interval={0}
                 />
-                <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} />
+                <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={{ stroke: '#cbd5e1' }} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0B132B',
-                    borderColor: '#1e293b',
-                    borderRadius: '6px',
-                    color: '#fff',
+                    backgroundColor: '#ffffff',
+                    borderColor: '#cbd5e1',
+                    borderRadius: '8px',
+                    color: '#0f172a',
                     fontSize: '12px',
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                   }}
                 />
-                <Bar dataKey="nasaScore" fill="#0284c7" radius={[4, 4, 0, 0]} name="NASA Score" />
+                <Bar dataKey="nasaScore" fill="#0284c7" name="NASA PHM Score (Lower is Better)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
-      </div>
-
-      {/* Methodology Explanatory Callout */}
-      <div className="p-4 bg-slate-900/60 border border-slate-800 rounded-lg text-xs text-slate-300 space-y-2 font-mono">
-        <div className="flex items-center space-x-2 font-bold text-white">
-          <Info className="w-4 h-4 text-cyan-400" />
-          <span>NASA PHM Data Challenge Methodology & Zero Data Leakage</span>
-        </div>
-        <p className="leading-relaxed text-slate-400">
-          <strong className="text-slate-200">Engine-Wise Cross Validation:</strong> Standard row-wise random train/test splits cause severe data leakage
-          because sequential cycles of the same engine share identical baseline calibration. Our evaluation utilizes a
-          strict <code>GroupShuffleSplit</code> partitioned by <code>engine_id</code>, ensuring validation engines are completely
-          unseen during training.
-        </p>
-        <p className="leading-relaxed text-slate-400">
-          <strong className="text-slate-200">Asymmetric Loss Formulation:</strong> The official NASA evaluation metric defines d_i = y_pred - y_true.
-          An early prediction (d_i &lt; 0) carries cost s_i = exp(-d_i / 13) - 1, whereas a late prediction (d_i &ge; 0)
-          carries cost s_i = exp(d_i / 10) - 1, reflecting the catastrophic hazard of operating past failure boundaries.
-        </p>
       </div>
     </div>
   );

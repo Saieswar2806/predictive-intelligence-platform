@@ -43,7 +43,7 @@ export const MaintenancePlanning: React.FC = () => {
   }
 
   if (!fleetData) {
-    return <div className="text-rose-400 font-mono text-sm p-4">Failed to load maintenance records.</div>;
+    return <div className="text-rose-600 font-mono text-sm p-4 bg-rose-50 border border-rose-200 rounded-lg">Failed to load maintenance records.</div>;
   }
 
   // Rank engines by maintenance priority: lowest RUL & highest anomaly severity first
@@ -54,7 +54,7 @@ export const MaintenancePlanning: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {/* Top Banner KPI Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
@@ -88,94 +88,94 @@ export const MaintenancePlanning: React.FC = () => {
       </div>
 
       {/* Maintenance Scenario Recovery Comparison */}
-      <div className="dark-panel p-5">
-        <div className="pb-3 border-b border-slate-800 mb-4">
-          <h3 className="text-sm font-bold text-white tracking-tight font-mono">
+      <div className="bg-white border border-slate-200/90 rounded-xl p-6 shadow-xs">
+        <div className="pb-4 border-b border-slate-200 mb-5">
+          <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">
             Prescriptive Maintenance Intervention Comparison
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-sm text-slate-500 mt-1">
             Comparative technical recovery trade-offs for turbofan lifecycle extension
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Action 1 */}
-          <div className="p-4 bg-slate-950/70 border border-slate-800 rounded-lg space-y-2.5">
+          <div className="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-3 shadow-xs">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-white text-sm font-mono">Compressor Core Wash</span>
-              <span className="text-[10px] font-mono bg-blue-950/80 text-blue-300 border border-blue-800/60 font-semibold px-2 py-0.5 rounded">
+              <span className="font-bold text-slate-900 text-base font-mono">Compressor Core Wash</span>
+              <span className="text-xs font-mono bg-blue-50 text-blue-700 border border-blue-200 font-semibold px-2.5 py-0.5 rounded-full">
                 ON-WING
               </span>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed">
               Detergent solution injection through fan duct removing atmospheric salt, ash, and particulate fouling.
             </p>
-            <div className="pt-2 border-t border-slate-800 text-xs font-mono space-y-1">
+            <div className="pt-3 border-t border-slate-200 text-xs font-mono space-y-1.5">
               <div className="flex justify-between">
-                <span className="text-slate-400">HPC Fouling Recovery:</span>
-                <span className="font-bold text-emerald-400">~55% Recovered</span>
+                <span className="text-slate-500 font-medium">HPC Fouling Recovery:</span>
+                <span className="font-bold text-emerald-700">~55% Recovered</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">EGT Margin Recovery:</span>
-                <span className="font-bold text-emerald-400">+8°C Margin</span>
+                <span className="text-slate-500 font-medium">EGT Margin Recovery:</span>
+                <span className="font-bold text-emerald-700">+8°C Margin</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Typical Downtime:</span>
-                <span className="text-slate-200">4 Hours</span>
+                <span className="text-slate-500 font-medium">Typical Downtime:</span>
+                <span className="text-slate-800 font-semibold">4 Hours</span>
               </div>
             </div>
           </div>
 
           {/* Action 2 */}
-          <div className="p-4 bg-slate-950/70 border border-slate-800 rounded-lg space-y-2.5">
+          <div className="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-3 shadow-xs">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-white text-sm font-mono">Hot-Section Blade Repair</span>
-              <span className="text-[10px] font-mono bg-amber-950/80 text-amber-300 border border-amber-800/60 font-semibold px-2 py-0.5 rounded">
+              <span className="font-bold text-slate-900 text-base font-mono">Hot-Section Blade Repair</span>
+              <span className="text-xs font-mono bg-amber-50 text-amber-700 border border-amber-200 font-semibold px-2.5 py-0.5 rounded-full">
                 LINE STATION
               </span>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed">
               Borescope inspection of HPT stage 1 blades, leading-edge blending, and thermal barrier touch-up.
             </p>
-            <div className="pt-2 border-t border-slate-800 text-xs font-mono space-y-1">
+            <div className="pt-3 border-t border-slate-200 text-xs font-mono space-y-1.5">
               <div className="flex justify-between">
-                <span className="text-slate-400">HPT Creep Wear Recovery:</span>
-                <span className="font-bold text-emerald-400">~40% Recovered</span>
+                <span className="text-slate-500 font-medium">HPT Creep Wear Recovery:</span>
+                <span className="font-bold text-emerald-700">~40% Recovered</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">RUL Extension:</span>
-                <span className="font-bold text-emerald-400">+25 – 35 Cycles</span>
+                <span className="text-slate-500 font-medium">RUL Extension:</span>
+                <span className="font-bold text-emerald-700">+25 – 35 Cycles</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Typical Downtime:</span>
-                <span className="text-slate-200">18 Hours</span>
+                <span className="text-slate-500 font-medium">Typical Downtime:</span>
+                <span className="text-slate-800 font-semibold">18 Hours</span>
               </div>
             </div>
           </div>
 
           {/* Action 3 */}
-          <div className="p-4 bg-slate-950/70 border border-slate-800 rounded-lg space-y-2.5">
+          <div className="p-5 bg-slate-50 border border-slate-200 rounded-xl space-y-3 shadow-xs">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-white text-sm font-mono">Full Depot Overhaul</span>
-              <span className="text-[10px] font-mono bg-purple-950/80 text-purple-300 border border-purple-800/60 font-semibold px-2 py-0.5 rounded">
+              <span className="font-bold text-slate-900 text-base font-mono">Full Depot Overhaul</span>
+              <span className="text-xs font-mono bg-purple-50 text-purple-700 border border-purple-200 font-semibold px-2.5 py-0.5 rounded-full">
                 SHOP VISIT
               </span>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed">
               Complete module disassembly, rotor rebalancing, life-limited parts (LLP) replacement, test cell run.
             </p>
-            <div className="pt-2 border-t border-slate-800 text-xs font-mono space-y-1">
+            <div className="pt-3 border-t border-slate-200 text-xs font-mono space-y-1.5">
               <div className="flex justify-between">
-                <span className="text-slate-400">Subsystem Recovery:</span>
-                <span className="font-bold text-emerald-400">100% (Pristine)</span>
+                <span className="text-slate-500 font-medium">Subsystem Recovery:</span>
+                <span className="font-bold text-emerald-700">100% (Pristine)</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">RUL Reset:</span>
-                <span className="font-bold text-emerald-400">Full Design Life</span>
+                <span className="text-slate-500 font-medium">RUL Reset:</span>
+                <span className="font-bold text-emerald-700">Full Design Life</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-400">Typical Downtime:</span>
-                <span className="text-slate-200">28 Days</span>
+                <span className="text-slate-500 font-medium">Typical Downtime:</span>
+                <span className="text-slate-800 font-semibold">28 Days</span>
               </div>
             </div>
           </div>
@@ -183,12 +183,12 @@ export const MaintenancePlanning: React.FC = () => {
       </div>
 
       {/* Prioritized Turbofan Maintenance Schedule */}
-      <div className="dark-panel overflow-hidden">
-        <div className="p-5 border-b border-slate-800">
-          <h3 className="text-sm font-bold text-white tracking-tight font-mono">
+      <div className="bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-xs">
+        <div className="p-6 border-b border-slate-200">
+          <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">
             Turbofan Maintenance Priority Ranking
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-sm text-slate-500 mt-1">
             Sorted by urgency based on Remaining Useful Life and multi-sensor anomaly classification
           </p>
         </div>
@@ -211,34 +211,44 @@ export const MaintenancePlanning: React.FC = () => {
               {prioritizedEngines.slice(0, 15).map((eng, idx) => {
                 const isUrgent = eng.risk_level === 'HIGH';
                 return (
-                  <tr key={eng.engine_id} className={`hover:bg-slate-800/40 transition-colors ${isUrgent ? 'bg-rose-950/20' : ''}`}>
-                    <td className="font-mono font-bold text-cyan-400">#{idx + 1}</td>
-                    <td className="font-mono font-bold text-white">
+                  <tr key={eng.engine_id} className={`hover:bg-slate-50 transition-colors ${isUrgent ? 'bg-rose-50/60' : ''}`}>
+                    <td className="font-mono font-bold text-blue-600">#{idx + 1}</td>
+                    <td className="font-mono font-bold text-slate-900">
                       ENG-{eng.engine_id.toString().padStart(3, '0')}
                     </td>
-                    <td className="font-mono text-slate-300">{eng.current_cycle}</td>
+                    <td className="font-mono text-slate-700">{eng.current_cycle}</td>
                     <td className="font-mono font-bold">
-                      <span className={eng.predicted_rul < 25 ? 'text-rose-400' : 'text-slate-200'}>
+                      <span className={eng.predicted_rul < 25 ? 'text-rose-600' : eng.predicted_rul < 55 ? 'text-amber-600' : 'text-emerald-700'}>
                         {eng.predicted_rul} cycles
                       </span>
                     </td>
-                    <td className="font-mono text-slate-300">{eng.health_index.toFixed(2)}</td>
+                    <td className="font-mono text-slate-700">{eng.health_index.toFixed(2)}</td>
                     <td>
                       <StatusBadge status={eng.risk_level} size="sm" />
                     </td>
-                    <td className="font-mono text-xs text-slate-300">
-                      {eng.predicted_rul < 20
-                        ? 'Immediate (Within 5 cycles)'
-                        : eng.predicted_rul < 45
-                        ? 'Next A-Check (Within 15 cycles)'
-                        : 'Routine C-Check window'}
+                    <td className="font-mono text-xs text-slate-700 font-semibold">
+                      {eng.predicted_rul < 25
+                        ? 'Next 3 Cycles (Immediate)'
+                        : eng.predicted_rul < 50
+                        ? 'Within 15 Cycles'
+                        : 'Routine Scheduled Phase'}
                     </td>
-                    <td className="text-xs font-mono text-slate-300">
-                      {eng.predicted_rul < 20
-                        ? 'Borescope HPT Stage 1 & Schedule Removal'
-                        : eng.predicted_rul < 45
-                        ? 'Perform Detergent Compressor Core Wash'
-                        : 'Continue Standard Flight Monitoring'}
+                    <td>
+                      <span
+                        className={`text-xs font-mono font-semibold px-2.5 py-1 rounded-full border ${
+                          eng.predicted_rul < 25
+                            ? 'bg-rose-50 text-rose-800 border-rose-300'
+                            : eng.predicted_rul < 50
+                            ? 'bg-amber-50 text-amber-800 border-amber-300'
+                            : 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                        }`}
+                      >
+                        {eng.predicted_rul < 25
+                          ? 'Depot Removal & Overhaul'
+                          : eng.predicted_rul < 50
+                          ? 'Borescope Blade Inspection'
+                          : 'Standard Telemetry Watch'}
+                      </span>
                     </td>
                   </tr>
                 );
@@ -247,21 +257,10 @@ export const MaintenancePlanning: React.FC = () => {
           </table>
         </div>
 
-        <div className="p-3 bg-slate-950/80 border-t border-slate-800 text-xs text-slate-400 flex justify-between items-center font-mono">
-          <span>Showing Top 15 Highest Priority Turbofans</span>
-          <span>DECISION SUPPORT ONLY • FAA / EASA COMPLIANCE REQUIRED</span>
+        <div className="p-4 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex justify-between items-center font-mono">
+          <span>Showing 15 highest-priority turbofans</span>
+          <span>OPTIMIZED FOR MINIMUM FLEET GROUNDING DOWNTIME</span>
         </div>
-      </div>
-
-      {/* Regulatory & Safety Disclaimer */}
-      <div className="p-4 bg-slate-900/60 border border-slate-800 rounded-lg text-xs text-slate-400 flex items-start space-x-3 font-mono">
-        <Info className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-        <p className="leading-relaxed">
-          <strong className="text-slate-200">Decision-Support Notice:</strong> Maintenance recommendations generated by this predictive intelligence
-          platform are intended strictly for engineering decision support and planning prioritization. All maintenance
-          actions, component removals, and airframe deferrals must comply with applicable Type Certificate Data Sheets (TCDS),
-          Aircraft Maintenance Manuals (AMM), and certified human engineering sign-off.
-        </p>
       </div>
     </div>
   );

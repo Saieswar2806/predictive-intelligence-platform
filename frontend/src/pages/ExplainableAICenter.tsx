@@ -75,17 +75,17 @@ export const ExplainableAICenter: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {/* Engine Selection Bar */}
-      <div className="dark-panel p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center space-x-3">
-          <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider font-mono">
+          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider font-mono">
             SELECT ENGINE FOR SHAP DECOMPOSITION:
           </label>
           <select
             value={selectedEngine}
             onChange={(e) => setSelectedEngine(parseInt(e.target.value))}
-            className="border border-slate-700 rounded px-3 py-1.5 text-xs font-mono font-bold bg-slate-950 text-white"
+            className="border border-slate-300 rounded-lg px-3.5 py-2 text-sm font-mono font-bold bg-slate-50 text-slate-800"
           >
             {Array.from({ length: 100 }, (_, i) => i + 1).map((id) => (
               <option key={id} value={id}>
@@ -95,8 +95,8 @@ export const ExplainableAICenter: React.FC = () => {
           </select>
         </div>
 
-        <div className="flex items-center space-x-2 text-xs font-mono text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-3 py-1 rounded">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+        <div className="flex items-center space-x-2 text-xs font-mono font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-3.5 py-1.5 rounded-full">
+          <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
           <span>SHAP TREE-EXPLAINER KERNEL</span>
         </div>
       </div>
@@ -104,72 +104,74 @@ export const ExplainableAICenter: React.FC = () => {
       {loading ? (
         <LoadingSpinner message="Calculating Shapley value decomposition for engine..." size="lg" />
       ) : error || !explanation ? (
-        <div className="bg-rose-950/60 border border-rose-800/80 text-rose-200 p-6 rounded-lg text-sm dark-panel">
-          <h3 className="font-bold text-rose-300 mb-1">SHAP Decomposition Unavailable</h3>
-          <p className="text-xs text-rose-300 mb-4">{error || 'Unable to compute feature attributions'}</p>
+        <div className="bg-rose-50 border border-rose-200 text-rose-800 p-6 rounded-xl text-sm font-mono shadow-xs">
+          <h3 className="font-bold text-rose-900 text-base mb-1">SHAP Decomposition Unavailable</h3>
+          <p className="text-sm text-rose-700 mb-4">{error || 'Unable to compute feature attributions'}</p>
         </div>
       ) : (
         <>
           {/* Engineering Diagnostic Translation Callout */}
-          <div className="dark-panel p-5 border-l-4 border-l-cyan-500">
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800 font-mono text-xs">
-              <span className="font-bold text-slate-400 tracking-wider uppercase">
+          <div className="bg-white border border-slate-200/90 rounded-xl p-6 shadow-xs border-l-4 border-l-blue-600">
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100 font-mono text-xs">
+              <span className="font-bold text-slate-500 tracking-wider uppercase">
                 ENGINEERING DIAGNOSTIC SYNTHESIS
               </span>
-              <span className="text-cyan-400 font-bold">
+              <span className="text-blue-700 font-bold text-sm">
                 PREDICTED RUL: {explanation.predicted_rul.toFixed(1)} FLIGHT CYCLES
               </span>
             </div>
-            <p className="text-sm text-slate-200 leading-relaxed font-sans">
+            <p className="text-base text-slate-800 leading-relaxed font-sans font-medium">
               {explanation.diagnostic_summary}
             </p>
           </div>
 
           {/* Local Feature Impact Horizontal Bar Chart */}
-          <div className="dark-panel p-5">
-            <div className="pb-3 border-b border-slate-800 mb-4 flex items-center justify-between">
+          <div className="bg-white border border-slate-200/90 rounded-xl p-6 shadow-xs">
+            <div className="pb-4 border-b border-slate-200 mb-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
               <div>
-                <h3 className="text-sm font-bold text-white tracking-tight font-mono">
+                <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">
                   Local Shapley Value Feature Attributions (Cycle {explanation.cycle})
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-sm text-slate-500 mt-1">
                   Exact cycle impact each sensor measurement adds (+) or subtracts (-) from baseline expected RUL
                 </p>
               </div>
-              <div className="flex items-center space-x-4 text-xs font-mono">
-                <span className="flex items-center space-x-1.5 text-emerald-400">
-                  <span className="w-2.5 h-2.5 rounded bg-emerald-500 inline-block"></span>
+              <div className="flex items-center space-x-4 text-xs font-mono font-semibold">
+                <span className="flex items-center space-x-1.5 text-emerald-700">
+                  <span className="w-3 h-3 rounded bg-emerald-500 inline-block"></span>
                   <span>Extends Life (+)</span>
                 </span>
-                <span className="flex items-center space-x-1.5 text-rose-400">
-                  <span className="w-2.5 h-2.5 rounded bg-rose-500 inline-block"></span>
+                <span className="flex items-center space-x-1.5 text-rose-700">
+                  <span className="w-3 h-3 rounded bg-rose-500 inline-block"></span>
                   <span>Degradation Penalty (-)</span>
                 </span>
               </div>
             </div>
 
-            <div className="h-80 w-full">
+            <div className="h-96 w-full pt-2">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={explanation.top_feature_contributions}
                   layout="vertical"
-                  margin={{ top: 5, right: 30, left: 160, bottom: 5 }}
+                  margin={{ top: 5, right: 30, left: 180, bottom: 5 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" horizontal={false} />
-                  <XAxis type="number" tick={{ fontSize: 11, fill: '#94a3b8' }} domain={['auto', 'auto']} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
+                  <XAxis type="number" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={{ stroke: '#cbd5e1' }} domain={['auto', 'auto']} />
                   <YAxis
                     type="category"
                     dataKey="description"
-                    tick={{ fontSize: 10, fill: '#cbd5e1' }}
-                    width={150}
+                    tick={{ fontSize: 12, fill: '#334155' }}
+                    axisLine={{ stroke: '#cbd5e1' }}
+                    width={170}
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#0B132B',
-                      borderColor: '#1e293b',
-                      borderRadius: '6px',
-                      color: '#fff',
-                      fontSize: '11px',
+                      backgroundColor: '#ffffff',
+                      borderColor: '#cbd5e1',
+                      borderRadius: '8px',
+                      color: '#0f172a',
+                      fontSize: '12px',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                     }}
                     formatter={(val: any) => [`${val > 0 ? '+' : ''}${val} cycles`, 'SHAP Impact']}
                   />
@@ -177,7 +179,7 @@ export const ExplainableAICenter: React.FC = () => {
                     {explanation.top_feature_contributions.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
-                        fill={entry.impact_cycles >= 0 ? '#10b981' : '#f43f5e'}
+                        fill={entry.impact_cycles >= 0 ? '#10b981' : '#e11d48'}
                       />
                     ))}
                   </Bar>
@@ -187,9 +189,9 @@ export const ExplainableAICenter: React.FC = () => {
           </div>
 
           {/* Granular Feature Contribution Table */}
-          <div className="dark-panel overflow-hidden">
-            <div className="p-4 border-b border-slate-800">
-              <h3 className="text-sm font-bold text-white tracking-tight font-mono">
+          <div className="bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-xs">
+            <div className="p-6 border-b border-slate-200">
+              <h3 className="text-xl font-bold text-slate-900 tracking-tight font-mono">
                 Thermodynamic Feature Breakdown & Physical Attribution
               </h3>
             </div>
@@ -207,22 +209,22 @@ export const ExplainableAICenter: React.FC = () => {
                 </thead>
                 <tbody>
                   {explanation.top_feature_contributions.map((feat, idx) => (
-                    <tr key={idx} className="hover:bg-slate-800/40 transition-colors">
-                      <td className="font-semibold text-white">{feat.description}</td>
-                      <td className="font-mono text-xs text-slate-400">{feat.feature}</td>
-                      <td className="font-mono text-xs text-slate-300">{feat.feature_value.toFixed(3)}</td>
+                    <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                      <td className="font-semibold text-slate-900">{feat.description}</td>
+                      <td className="font-mono text-xs text-slate-500">{feat.feature}</td>
+                      <td className="font-mono text-xs text-slate-700">{feat.feature_value.toFixed(3)}</td>
                       <td className="font-mono font-bold">
-                        <span className={feat.impact_cycles >= 0 ? 'text-emerald-400' : 'text-rose-400'}>
+                        <span className={feat.impact_cycles >= 0 ? 'text-emerald-700' : 'text-rose-600'}>
                           {feat.impact_cycles > 0 ? '+' : ''}
                           {feat.impact_cycles.toFixed(2)} cyc
                         </span>
                       </td>
                       <td>
                         <span
-                          className={`text-xs px-2 py-0.5 rounded font-mono font-medium border ${
+                          className={`text-xs px-2.5 py-1 rounded-full font-mono font-semibold border ${
                             feat.impact_cycles >= 0
-                              ? 'bg-emerald-950/80 text-emerald-400 border-emerald-800/60'
-                              : 'bg-rose-950/80 text-rose-400 border-rose-800/60'
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                              : 'bg-rose-50 text-rose-800 border-rose-300'
                           }`}
                         >
                           {feat.direction}
