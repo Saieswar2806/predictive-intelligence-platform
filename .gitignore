@@ -1,0 +1,24 @@
+.venv/
+.idea/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+mlruns/
+mlflow.db
+*.log
+
+# Large model checkpoints (exceeds or approaches GitHub 100MB file limit)
+artifacts/*.joblib
+artifacts/*.pt
+!artifacts/.gitkeep
+!artifacts/*.json
+!artifacts/*.md
+!artifacts/*.pptx
+
+# Data
+data/*
+!data/README.md
+
+.DS_Store

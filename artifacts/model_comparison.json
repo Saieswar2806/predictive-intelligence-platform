@@ -1,0 +1,72 @@
+{
+  "Ridge Baseline": {
+    "validation": {
+      "MAE": 12.027,
+      "RMSE": 15.646,
+      "R2": 0.8593,
+      "NASA_PHM_Score": 18914.6
+    },
+    "test": {
+      "MAE": 13.155,
+      "RMSE": 16.219,
+      "R2": 0.8362,
+      "NASA_PHM_Score": 414.0
+    }
+  },
+  "Random Forest": {
+    "validation": {
+      "MAE": 8.012,
+      "RMSE": 11.356,
+      "R2": 0.9259,
+      "NASA_PHM_Score": 10139.8
+    },
+    "test": {
+      "MAE": 9.638,
+      "RMSE": 12.959,
+      "R2": 0.8954,
+      "NASA_PHM_Score": 249.8
+    }
+  },
+  "Extra Trees": {
+    "validation": {
+      "MAE": 8.725,
+      "RMSE": 11.995,
+      "R2": 0.9173,
+      "NASA_PHM_Score": 11006.8
+    },
+    "test": {
+      "MAE": 10.082,
+      "RMSE": 13.476,
+      "R2": 0.8869,
+      "NASA_PHM_Score": 291.4
+    }
+  },
+  "XGBoost": {
+    "validation": {
+      "MAE": 7.486,
+      "RMSE": 11.231,
+      "R2": 0.9275,
+      "NASA_PHM_Score": 10253.1
+    },
+    "test": {
+      "MAE": 9.868,
+      "RMSE": 13.703,
+      "R2": 0.8831,
+      "NASA_PHM_Score": 279.0
+    }
+  },
+  "LSTM Deep Learning": {
+    "validation": {
+      "MAE": 14.024,
+      "RMSE": 18.225,
+      "R2": 0.8091,
+      "NASA_PHM_Score": 22894.1
+    },
+    "test": {
+      "MAE": 14.055,
+      "RMSE": 17.665,
+      "R2": 0.8057,
+      "NASA_PHM_Score": 576.8
+    }
+  }
+}
