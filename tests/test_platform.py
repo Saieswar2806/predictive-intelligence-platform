@@ -15,7 +15,7 @@ from src.models.xgboost_model import make_xgboost
 from src.models.anomaly import EnhancedAnomalyDetector
 from src.digital_twin import TurbofanDigitalTwin
 from src.explain import get_feature_description, generate_diagnostic_summary
-from src.api import health, predict_raw, simulate_twin, RawTelemetryPayload, TwinSimulatePayload
+from src.api import health, predict_raw, simulate_twin, get_fleet_overview, get_engine_history, get_mlops_status, RawTelemetryPayload, TwinSimulatePayload
 
 DATA_PATH = ROOT / "data" / "CMAPSSData"
 
@@ -134,3 +134,22 @@ def test_fastapi_endpoints_direct():
     assert "predicted_rul_cycles" in pred_res
     assert pred_res["maintenance_risk"] in ["HIGH", "MEDIUM", "LOW"]
     assert "health_assessment" in pred_res
+
+def test_fleet_and_mlops_endpoints():
+    # 1. Fleet Overview
+    fleet = get_fleet_overview()
+    assert fleet["total_engines"] == 100
+    assert fleet["healthy_count"] + fleet["warning_count"] + fleet["critical_count"] == 100
+    assert len(fleet["engines"]) == 100
+
+    # 2. Engine History
+    hist = get_engine_history(1)
+    assert hist["engine_id"] == 1
+    assert hist["total_recorded_cycles"] > 0
+    assert len(hist["history"]) == hist["total_recorded_cycles"]
+
+    # 3. MLOps Status
+    mlops = get_mlops_status()
+    assert mlops["model_version"] == "2.0.0"
+    assert mlops["api_status"] == "healthy"
+    assert len(mlops["artifacts"]) > 0
