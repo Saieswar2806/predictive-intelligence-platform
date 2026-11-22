@@ -26,12 +26,12 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="bg-rose-50 border border-rose-200 text-rose-800 p-6 rounded-lg text-sm">
-          <h3 className="font-semibold text-rose-900 mb-1">Visualization Module Error</h3>
-          <p className="text-xs text-rose-700 mb-3">{this.props.fallbackMessage || this.state.error?.message}</p>
+        <div className="bg-rose-950/60 border border-rose-800/80 text-rose-200 p-6 rounded-lg text-sm dark-panel font-mono">
+          <h3 className="font-semibold text-rose-300 mb-1">Visualization Module Error</h3>
+          <p className="text-xs text-rose-300 mb-3">{this.props.fallbackMessage || this.state.error?.message}</p>
           <button
             onClick={() => this.setState({ hasError: false })}
-            className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded text-xs font-medium transition-colors"
+            className="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded text-xs font-semibold transition-colors"
           >
             Retry Component
           </button>

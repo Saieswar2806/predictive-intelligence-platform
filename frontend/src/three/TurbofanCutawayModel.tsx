@@ -29,9 +29,11 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
 }) => {
   const fanRotorRef = useRef<THREE.Group>(null);
   const coreSpoolRef = useRef<THREE.Group>(null);
+  const pulseRef = useRef<number>(0);
 
-  // Rotate fan and compressor spools smoothly
+  // Rotate fan and compressor spools smoothly + subtle emissive pulse
   useFrame((_, delta) => {
+    pulseRef.current += delta * 3.0;
     if (fanRotorRef.current) {
       fanRotorRef.current.rotation.z -= delta * fanSpeed * 4.0;
     }
@@ -40,12 +42,12 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
     }
   });
 
-  // Dynamic wear color helper
+  // Dynamic wear color helper with industrial aesthetic
   const getSubsystemColor = (wearPct: number = 0, isSelected: boolean) => {
     if (isSelected) return '#38bdf8'; // bright cyan highlight
-    if (wearPct > 65) return '#f43f5e'; // critical rose
+    if (wearPct > 65) return '#f43f5e'; // critical red
     if (wearPct > 35) return '#fbbf24'; // warning amber
-    return '#64748b'; // standard aerospace slate
+    return '#475569'; // standard aerospace slate
   };
 
   // Generate fan blades procedurally (24 titanium swept blades)
@@ -71,7 +73,7 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
     if (thermalStress > 1.3 || (subsystemsWear.combustor ?? 0) > 50) {
       return '#f97316'; // orange-hot distress
     }
-    return '#38bdf8'; // nominal clean burn
+    return '#0284c7'; // nominal clean burn cyan/blue
   }, [thermalStress, subsystemsWear.combustor]);
 
   return (
@@ -89,19 +91,21 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
             args={[1.65, 1.5, 3.8, 48, 1, true, Math.PI * 0.35, Math.PI * 1.3]}
           />
           <meshStandardMaterial
-            color={selectedComponent === 'casing' ? '#38bdf8' : '#e2e8f0'}
-            metalness={0.7}
-            roughness={0.25}
+            color={selectedComponent === 'casing' ? '#38bdf8' : '#334155'}
+            metalness={0.8}
+            roughness={0.2}
             side={THREE.DoubleSide}
             transparent
-            opacity={0.65}
+            opacity={selectedComponent === 'casing' ? 0.85 : 0.45}
+            emissive={selectedComponent === 'casing' ? '#0284c7' : '#000000'}
+            emissiveIntensity={selectedComponent === 'casing' ? 0.4 : 0}
           />
         </mesh>
 
         {/* Structural inlet ring / lip */}
         <mesh position={[0, 0, 1.9]} rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[1.65, 0.08, 16, 64]} />
-          <meshStandardMaterial color="#94a3b8" metalness={0.9} roughness={0.15} />
+          <meshStandardMaterial color="#64748b" metalness={0.9} roughness={0.15} />
         </mesh>
       </group>
 
@@ -112,15 +116,17 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
           <coneGeometry args={[0.55, 1.1, 32]} />
           <meshStandardMaterial
             color={selectedComponent === 'fan' ? '#38bdf8' : '#0f172a'}
-            metalness={0.8}
-            roughness={0.2}
+            metalness={0.85}
+            roughness={0.15}
+            emissive={selectedComponent === 'fan' ? '#0284c7' : '#000000'}
+            emissiveIntensity={selectedComponent === 'fan' ? 0.3 : 0}
           />
         </mesh>
 
         {/* Central Rotor Disc */}
         <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.62, 0.62, 0.25, 32]} />
-          <meshStandardMaterial color="#475569" metalness={0.85} roughness={0.2} />
+          <meshStandardMaterial color="#475569" metalness={0.9} roughness={0.15} />
         </mesh>
 
         {/* 24 Titanium Wide-Chord Swept Fan Blades */}
@@ -139,6 +145,8 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
                 color={getSubsystemColor(subsystemsWear.fan, selectedComponent === 'fan')}
                 metalness={0.9}
                 roughness={0.15}
+                emissive={selectedComponent === 'fan' ? '#0284c7' : '#000000'}
+                emissiveIntensity={selectedComponent === 'fan' ? 0.4 : 0}
               />
             </mesh>
           </group>
@@ -156,9 +164,9 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
         <mesh rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.9, 0.85, 0.6, 32]} />
           <meshStandardMaterial
-            color={selectedComponent === 'fan' ? '#38bdf8' : '#334155'}
-            metalness={0.7}
-            roughness={0.3}
+            color={selectedComponent === 'fan' ? '#38bdf8' : '#1e293b'}
+            metalness={0.8}
+            roughness={0.25}
           />
         </mesh>
       </group>
@@ -179,12 +187,14 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
                 color={getSubsystemColor(subsystemsWear.hpc, selectedComponent === 'hpc')}
                 metalness={0.85}
                 roughness={0.2}
+                emissive={selectedComponent === 'hpc' ? '#0284c7' : '#000000'}
+                emissiveIntensity={selectedComponent === 'hpc' ? 0.4 : 0}
               />
             </mesh>
             {/* Blisk rotor rings */}
             <mesh position={[0, 0, 0.05]} rotation={[Math.PI / 2, 0, 0]}>
               <torusGeometry args={[stg.radius + 0.02, 0.03, 12, 32]} />
-              <meshStandardMaterial color="#cbd5e1" metalness={0.9} roughness={0.1} />
+              <meshStandardMaterial color="#94a3b8" metalness={0.9} roughness={0.1} />
             </mesh>
           </group>
         ))}
@@ -204,9 +214,9 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
           <meshStandardMaterial
             color={getSubsystemColor(subsystemsWear.combustor, selectedComponent === 'combustor')}
             emissive={combustorGlow}
-            emissiveIntensity={0.35}
-            metalness={0.6}
-            roughness={0.4}
+            emissiveIntensity={selectedComponent === 'combustor' ? 0.7 : 0.4}
+            metalness={0.7}
+            roughness={0.3}
             side={THREE.DoubleSide}
           />
         </mesh>
@@ -232,16 +242,18 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
             color={getSubsystemColor(subsystemsWear.hpt, selectedComponent === 'hpt')}
             metalness={0.9}
             roughness={0.15}
+            emissive={selectedComponent === 'hpt' ? '#0284c7' : '#000000'}
+            emissiveIntensity={selectedComponent === 'hpt' ? 0.4 : 0}
           />
         </mesh>
         {/* HPT Stage 1 blades ring */}
         <mesh rotation={[Math.PI / 2, 0, 0]}>
           <torusGeometry args={[0.65, 0.05, 16, 32]} />
           <meshStandardMaterial
-            color={selectedComponent === 'hpt' ? '#38bdf8' : '#e11d48'}
-            emissive={subsystemsWear.hpt && subsystemsWear.hpt > 40 ? '#f43f5e' : '#000000'}
-            emissiveIntensity={0.2}
-            metalness={0.8}
+            color={selectedComponent === 'hpt' ? '#38bdf8' : ((subsystemsWear.hpt ?? 0) > 40 ? '#f43f5e' : '#475569')}
+            emissive={(subsystemsWear.hpt ?? 0) > 40 ? '#f43f5e' : (selectedComponent === 'hpt' ? '#0284c7' : '#000000')}
+            emissiveIntensity={0.3}
+            metalness={0.85}
             roughness={0.2}
           />
         </mesh>
@@ -259,8 +271,10 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
           <cylinderGeometry args={[0.66, 0.75, 0.45, 32]} />
           <meshStandardMaterial
             color={getSubsystemColor(subsystemsWear.lpt, selectedComponent === 'lpt')}
-            metalness={0.8}
-            roughness={0.25}
+            metalness={0.85}
+            roughness={0.2}
+            emissive={selectedComponent === 'lpt' ? '#0284c7' : '#000000'}
+            emissiveIntensity={selectedComponent === 'lpt' ? 0.4 : 0}
           />
         </mesh>
       </group>
@@ -277,7 +291,7 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
         <mesh rotation={[-Math.PI / 2, 0, 0]}>
           <coneGeometry args={[0.45, 0.9, 32]} />
           <meshStandardMaterial
-            color={selectedComponent === 'exhaust' ? '#38bdf8' : '#1e293b'}
+            color={selectedComponent === 'exhaust' ? '#38bdf8' : '#0f172a'}
             metalness={0.8}
             roughness={0.3}
           />
@@ -286,7 +300,7 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
         <mesh rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.85, 0.95, 0.5, 32, 1, true]} />
           <meshStandardMaterial
-            color="#475569"
+            color="#334155"
             metalness={0.85}
             roughness={0.2}
             side={THREE.DoubleSide}
@@ -297,18 +311,18 @@ export const TurbofanCutawayModel: React.FC<TurbofanCutawayModelProps> = ({
       {/* 9. SENSOR MEASUREMENT PIN LOCATIONS */}
       {/* Sensor T24 (Fan Inlet) */}
       <mesh position={[1.4, 0.5, 1.4]}>
-        <sphereGeometry args={[0.06, 16, 16]} />
-        <meshStandardMaterial color="#0284c7" emissive="#0284c7" emissiveIntensity={0.8} />
+        <sphereGeometry args={[0.07, 16, 16]} />
+        <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={0.9} />
       </mesh>
       {/* Sensor T30/P30 (HPC Outlet) */}
       <mesh position={[0.7, 0.45, -1.3]}>
-        <sphereGeometry args={[0.06, 16, 16]} />
-        <meshStandardMaterial color="#f59e0b" emissive="#f59e0b" emissiveIntensity={0.8} />
+        <sphereGeometry args={[0.07, 16, 16]} />
+        <meshStandardMaterial color="#fbbf24" emissive="#fbbf24" emissiveIntensity={0.9} />
       </mesh>
       {/* Sensor T50 (LPT Outlet) */}
       <mesh position={[0.75, 0.5, -2.5]}>
-        <sphereGeometry args={[0.06, 16, 16]} />
-        <meshStandardMaterial color="#e11d48" emissive="#e11d48" emissiveIntensity={0.8} />
+        <sphereGeometry args={[0.07, 16, 16]} />
+        <meshStandardMaterial color="#f43f5e" emissive="#f43f5e" emissiveIntensity={0.9} />
       </mesh>
     </group>
   );

@@ -6,6 +6,7 @@ import {
   ExplainResponse,
   ModelsComparisonResponse,
   MLOpsStatusResponse,
+  MLOpsDriftResponse,
 } from '../types/api';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
@@ -100,6 +101,10 @@ class ApiService {
 
   async getMLOpsStatus(): Promise<MLOpsStatusResponse> {
     return this.request('/mlops/status');
+  }
+
+  async getDriftStatus(): Promise<MLOpsDriftResponse> {
+    return this.request('/mlops/drift');
   }
 }
 

@@ -118,15 +118,15 @@ export const MachineIntelligence: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Controller Bar */}
-      <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="dark-panel p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center space-x-3">
-          <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider font-mono">
+          <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider font-mono">
             SELECT TURBOFAN:
           </label>
           <select
             value={selectedEngine}
             onChange={(e) => setSelectedEngine(parseInt(e.target.value))}
-            className="border border-slate-200 rounded px-3 py-1.5 text-xs font-mono font-bold bg-slate-50 text-slate-900"
+            className="border border-slate-700 rounded px-3 py-1.5 text-xs font-mono font-bold bg-slate-950 text-white"
           >
             {Array.from({ length: 100 }, (_, i) => i + 1).map((id) => (
               <option key={id} value={id}>
@@ -139,7 +139,7 @@ export const MachineIntelligence: React.FC = () => {
         <button
           onClick={() => runPrediction()}
           disabled={predicting}
-          className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-xs font-semibold transition-colors disabled:opacity-50"
+          className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded text-xs font-semibold transition-colors disabled:opacity-50 shadow-sm"
         >
           <Play className="w-3.5 h-3.5 fill-current" />
           <span>{predicting ? 'Executing Model Inference...' : 'Run Backend Inference'}</span>
@@ -195,13 +195,13 @@ export const MachineIntelligence: React.FC = () => {
       {/* Sensor Readouts & Historical Time Series Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Real-time Sensor Values & What-If Sliders */}
-        <div className="lg:col-span-5 bg-white rounded-lg border border-slate-200 p-5 shadow-xs space-y-4">
-          <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
+        <div className="lg:col-span-5 dark-panel p-5 space-y-4">
+          <div className="pb-3 border-b border-slate-800 flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-slate-900 tracking-tight">Active Sensor Measurements</h3>
-              <p className="text-xs text-slate-500">Live values for Cycle {activeCycle} (Adjust sliders for What-If tests)</p>
+              <h3 className="text-sm font-bold text-white tracking-tight font-mono">Active Sensor Measurements</h3>
+              <p className="text-xs text-slate-400">Live values for Cycle {activeCycle} (Adjust sliders for What-If tests)</p>
             </div>
-            <Sliders className="w-4 h-4 text-slate-400" />
+            <Sliders className="w-4 h-4 text-cyan-400" />
           </div>
 
           <div className="space-y-3 max-h-[460px] overflow-y-auto pr-2">
@@ -216,10 +216,10 @@ export const MachineIntelligence: React.FC = () => {
               { key: 'sensor_12', label: 'phi: Fuel Flow to Ps30 Ratio', unit: 'pps/psia', min: 518, max: 525, step: 0.1 },
               { key: 'sensor_15', label: 'BPR: Bypass Ratio', unit: 'ratio', min: 8.3, max: 8.6, step: 0.01 },
             ].map((s) => (
-              <div key={s.key} className="p-2.5 bg-slate-50 border border-slate-100 rounded">
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="font-semibold text-slate-700">{s.label}</span>
-                  <span className="font-mono text-slate-900 font-bold">
+              <div key={s.key} className="p-2.5 bg-slate-950/70 border border-slate-800 rounded">
+                <div className="flex justify-between text-xs mb-1 font-mono">
+                  <span className="font-semibold text-slate-300">{s.label}</span>
+                  <span className="text-white font-bold">
                     {sensors[s.key] !== undefined ? sensors[s.key].toFixed(2) : '—'} {s.unit}
                   </span>
                 </div>
@@ -230,7 +230,7 @@ export const MachineIntelligence: React.FC = () => {
                   step={s.step}
                   value={sensors[s.key] || s.min}
                   onChange={(e) => handleSensorChange(s.key, parseFloat(e.target.value))}
-                  className="w-full accent-blue-600 h-1 bg-slate-200 rounded cursor-pointer"
+                  className="w-full accent-blue-600 h-1 bg-slate-800 rounded cursor-pointer"
                 />
               </div>
             ))}
@@ -238,25 +238,25 @@ export const MachineIntelligence: React.FC = () => {
 
           <button
             onClick={() => runPrediction()}
-            className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white rounded text-xs font-semibold transition-colors"
+            className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-white rounded text-xs font-semibold transition-colors border border-slate-700"
           >
             Re-evaluate With Modified Telemetry
           </button>
         </div>
 
         {/* Genuine Sensor History Degradation Curves */}
-        <div className="lg:col-span-7 bg-white rounded-lg border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
+        <div className="lg:col-span-7 dark-panel p-5 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
               <div>
-                <h3 className="text-sm font-bold text-slate-900 tracking-tight">
+                <h3 className="text-sm font-bold text-white tracking-tight font-mono">
                   Turbofan ENG-{selectedEngine.toString().padStart(3, '0')} Telemetry Trajectory
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-slate-400">
                   Historical flight cycles recorded from C-MAPSS dataset showing degradation curve
                 </p>
               </div>
-              <Activity className="w-4 h-4 text-slate-400" />
+              <Activity className="w-4 h-4 text-cyan-400" />
             </div>
 
             {loadingHistory ? (
@@ -264,18 +264,19 @@ export const MachineIntelligence: React.FC = () => {
             ) : historyData ? (
               <div className="space-y-6">
                 <div>
-                  <h4 className="text-xs font-semibold text-slate-700 mb-2 font-mono">
+                  <h4 className="text-xs font-semibold text-slate-300 mb-2 font-mono">
                     EXHAUST & COMPRESSOR TEMPERATURE RISE (T50 & T30 °R)
                   </h4>
                   <div className="h-44 w-full">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={historyData.history} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                        <XAxis dataKey="cycle" tick={{ fontSize: 10, fill: '#64748b' }} />
-                        <YAxis tick={{ fontSize: 10, fill: '#64748b' }} domain={['auto', 'auto']} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                        <XAxis dataKey="cycle" tick={{ fontSize: 10, fill: '#94a3b8' }} />
+                        <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} domain={['auto', 'auto']} />
                         <Tooltip
                           contentStyle={{
-                            backgroundColor: '#0f172a',
+                            backgroundColor: '#0B132B',
+                            borderColor: '#1e293b',
                             borderRadius: '6px',
                             color: '#fff',
                             fontSize: '11px',
@@ -284,7 +285,7 @@ export const MachineIntelligence: React.FC = () => {
                         <Line
                           type="monotone"
                           dataKey="sensor_4"
-                          stroke="#e11d48"
+                          stroke="#f43f5e"
                           strokeWidth={1.5}
                           dot={false}
                           name="LPT Temp T50 (°R)"
@@ -292,7 +293,7 @@ export const MachineIntelligence: React.FC = () => {
                         <Line
                           type="monotone"
                           dataKey="sensor_3"
-                          stroke="#f59e0b"
+                          stroke="#fbbf24"
                           strokeWidth={1.5}
                           dot={false}
                           name="HPC Temp T30 (°R)"
@@ -303,18 +304,19 @@ export const MachineIntelligence: React.FC = () => {
                 </div>
 
                 <div>
-                  <h4 className="text-xs font-semibold text-slate-700 mb-2 font-mono">
+                  <h4 className="text-xs font-semibold text-slate-300 mb-2 font-mono">
                     HPC PRESSURE DECAY & CORE SPEED (P30 psia & NRc rpm)
                   </h4>
                   <div className="h-44 w-full">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={historyData.history} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                        <XAxis dataKey="cycle" tick={{ fontSize: 10, fill: '#64748b' }} />
-                        <YAxis tick={{ fontSize: 10, fill: '#64748b' }} domain={['auto', 'auto']} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                        <XAxis dataKey="cycle" tick={{ fontSize: 10, fill: '#94a3b8' }} />
+                        <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} domain={['auto', 'auto']} />
                         <Tooltip
                           contentStyle={{
-                            backgroundColor: '#0f172a',
+                            backgroundColor: '#0B132B',
+                            borderColor: '#1e293b',
                             borderRadius: '6px',
                             color: '#fff',
                             fontSize: '11px',
@@ -323,7 +325,7 @@ export const MachineIntelligence: React.FC = () => {
                         <Line
                           type="monotone"
                           dataKey="sensor_7"
-                          stroke="#2563eb"
+                          stroke="#38bdf8"
                           strokeWidth={1.5}
                           dot={false}
                           name="HPC Pressure P30 (psia)"
@@ -331,7 +333,7 @@ export const MachineIntelligence: React.FC = () => {
                         <Line
                           type="monotone"
                           dataKey="sensor_14"
-                          stroke="#8b5cf6"
+                          stroke="#a855f7"
                           strokeWidth={1.5}
                           dot={false}
                           name="Core Speed NRc (rpm)"
@@ -344,9 +346,9 @@ export const MachineIntelligence: React.FC = () => {
             ) : null}
           </div>
 
-          <div className="pt-3 border-t border-slate-100 flex justify-between text-xs text-slate-500 font-mono">
+          <div className="pt-3 border-t border-slate-800 flex justify-between text-xs text-slate-400 font-mono">
             <span>TOTAL CYCLES: {historyData?.total_recorded_cycles || 0}</span>
-            <span>MODEL: RANDOM FOREST ENSEMBLE</span>
+            <span>MODEL: XGBOOST REGRESSOR (ZERO LEAKAGE)</span>
           </div>
         </div>
       </div>

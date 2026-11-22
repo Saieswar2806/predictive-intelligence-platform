@@ -37,7 +37,6 @@ export const ExplainableAICenter: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      // First get the engine's latest historical reading
       const hist = await api.getEngineHistory(engId);
       if (!hist.history || hist.history.length === 0) {
         throw new Error(`Engine ${engId} telemetry not found`);
@@ -78,15 +77,15 @@ export const ExplainableAICenter: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Engine Selection Bar */}
-      <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="dark-panel p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center space-x-3">
-          <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider font-mono">
+          <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider font-mono">
             SELECT ENGINE FOR SHAP DECOMPOSITION:
           </label>
           <select
             value={selectedEngine}
             onChange={(e) => setSelectedEngine(parseInt(e.target.value))}
-            className="border border-slate-200 rounded px-3 py-1.5 text-xs font-mono font-bold bg-slate-50 text-slate-900"
+            className="border border-slate-700 rounded px-3 py-1.5 text-xs font-mono font-bold bg-slate-950 text-white"
           >
             {Array.from({ length: 100 }, (_, i) => i + 1).map((id) => (
               <option key={id} value={id}>
@@ -96,8 +95,8 @@ export const ExplainableAICenter: React.FC = () => {
           </select>
         </div>
 
-        <div className="flex items-center space-x-2 text-xs font-mono text-slate-500">
-          <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+        <div className="flex items-center space-x-2 text-xs font-mono text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-3 py-1 rounded">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
           <span>SHAP TREE-EXPLAINER KERNEL</span>
         </div>
       </div>
@@ -105,44 +104,44 @@ export const ExplainableAICenter: React.FC = () => {
       {loading ? (
         <LoadingSpinner message="Calculating Shapley value decomposition for engine..." size="lg" />
       ) : error || !explanation ? (
-        <div className="bg-rose-50 border border-rose-200 text-rose-800 p-6 rounded-lg text-sm">
-          <h3 className="font-bold text-rose-900 mb-1">SHAP Decomposition Unavailable</h3>
-          <p className="text-xs text-rose-700 mb-4">{error || 'Unable to compute feature attributions'}</p>
+        <div className="bg-rose-950/60 border border-rose-800/80 text-rose-200 p-6 rounded-lg text-sm dark-panel">
+          <h3 className="font-bold text-rose-300 mb-1">SHAP Decomposition Unavailable</h3>
+          <p className="text-xs text-rose-300 mb-4">{error || 'Unable to compute feature attributions'}</p>
         </div>
       ) : (
         <>
           {/* Engineering Diagnostic Translation Callout */}
-          <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs border-l-4 border-l-blue-600">
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
-              <span className="text-xs font-mono font-bold text-slate-500 tracking-wider uppercase">
+          <div className="dark-panel p-5 border-l-4 border-l-cyan-500">
+            <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800 font-mono text-xs">
+              <span className="font-bold text-slate-400 tracking-wider uppercase">
                 ENGINEERING DIAGNOSTIC SYNTHESIS
               </span>
-              <span className="text-xs font-mono text-blue-600 font-bold">
+              <span className="text-cyan-400 font-bold">
                 PREDICTED RUL: {explanation.predicted_rul.toFixed(1)} FLIGHT CYCLES
               </span>
             </div>
-            <p className="text-sm text-slate-800 leading-relaxed font-sans">
+            <p className="text-sm text-slate-200 leading-relaxed font-sans">
               {explanation.diagnostic_summary}
             </p>
           </div>
 
-          {/* Local Feature Impact Waterfall / Horizontal Bar Chart */}
-          <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs">
-            <div className="pb-3 border-b border-slate-100 mb-4 flex items-center justify-between">
+          {/* Local Feature Impact Horizontal Bar Chart */}
+          <div className="dark-panel p-5">
+            <div className="pb-3 border-b border-slate-800 mb-4 flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-slate-900 tracking-tight">
+                <h3 className="text-sm font-bold text-white tracking-tight font-mono">
                   Local Shapley Value Feature Attributions (Cycle {explanation.cycle})
                 </h3>
-                <p className="text-xs text-slate-500">
-                  Exact cycle impact each sensor measurement adds (+) or subtracts (-) from base RUL
+                <p className="text-xs text-slate-400">
+                  Exact cycle impact each sensor measurement adds (+) or subtracts (-) from baseline expected RUL
                 </p>
               </div>
               <div className="flex items-center space-x-4 text-xs font-mono">
-                <span className="flex items-center space-x-1.5 text-emerald-600">
+                <span className="flex items-center space-x-1.5 text-emerald-400">
                   <span className="w-2.5 h-2.5 rounded bg-emerald-500 inline-block"></span>
                   <span>Extends Life (+)</span>
                 </span>
-                <span className="flex items-center space-x-1.5 text-rose-600">
+                <span className="flex items-center space-x-1.5 text-rose-400">
                   <span className="w-2.5 h-2.5 rounded bg-rose-500 inline-block"></span>
                   <span>Degradation Penalty (-)</span>
                 </span>
@@ -156,17 +155,18 @@ export const ExplainableAICenter: React.FC = () => {
                   layout="vertical"
                   margin={{ top: 5, right: 30, left: 160, bottom: 5 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
-                  <XAxis type="number" tick={{ fontSize: 11, fill: '#64748b' }} domain={['auto', 'auto']} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" horizontal={false} />
+                  <XAxis type="number" tick={{ fontSize: 11, fill: '#94a3b8' }} domain={['auto', 'auto']} />
                   <YAxis
                     type="category"
                     dataKey="description"
-                    tick={{ fontSize: 10, fill: '#334155' }}
+                    tick={{ fontSize: 10, fill: '#cbd5e1' }}
                     width={150}
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: '#0f172a',
+                      backgroundColor: '#0B132B',
+                      borderColor: '#1e293b',
                       borderRadius: '6px',
                       color: '#fff',
                       fontSize: '11px',
@@ -187,10 +187,10 @@ export const ExplainableAICenter: React.FC = () => {
           </div>
 
           {/* Granular Feature Contribution Table */}
-          <div className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
-            <div className="p-4 border-b border-slate-200">
-              <h3 className="text-sm font-bold text-slate-900 tracking-tight">
-                Turbodynamic Feature Breakdown & Physical Attribution
+          <div className="dark-panel overflow-hidden">
+            <div className="p-4 border-b border-slate-800">
+              <h3 className="text-sm font-bold text-white tracking-tight font-mono">
+                Thermodynamic Feature Breakdown & Physical Attribution
               </h3>
             </div>
 
@@ -207,22 +207,22 @@ export const ExplainableAICenter: React.FC = () => {
                 </thead>
                 <tbody>
                   {explanation.top_feature_contributions.map((feat, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="font-semibold text-slate-900">{feat.description}</td>
-                      <td className="font-mono text-xs text-slate-500">{feat.feature}</td>
-                      <td className="font-mono text-xs text-slate-700">{feat.feature_value.toFixed(3)}</td>
+                    <tr key={idx} className="hover:bg-slate-800/40 transition-colors">
+                      <td className="font-semibold text-white">{feat.description}</td>
+                      <td className="font-mono text-xs text-slate-400">{feat.feature}</td>
+                      <td className="font-mono text-xs text-slate-300">{feat.feature_value.toFixed(3)}</td>
                       <td className="font-mono font-bold">
-                        <span className={feat.impact_cycles >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
+                        <span className={feat.impact_cycles >= 0 ? 'text-emerald-400' : 'text-rose-400'}>
                           {feat.impact_cycles > 0 ? '+' : ''}
                           {feat.impact_cycles.toFixed(2)} cyc
                         </span>
                       </td>
                       <td>
                         <span
-                          className={`text-xs px-2 py-0.5 rounded font-medium ${
+                          className={`text-xs px-2 py-0.5 rounded font-mono font-medium border ${
                             feat.impact_cycles >= 0
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                              : 'bg-rose-50 text-rose-700 border border-rose-200'
+                              ? 'bg-emerald-950/80 text-emerald-400 border-emerald-800/60'
+                              : 'bg-rose-950/80 text-rose-400 border-rose-800/60'
                           }`}
                         >
                           {feat.direction}

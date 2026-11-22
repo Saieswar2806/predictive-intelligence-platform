@@ -14,8 +14,8 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ message = 'Loadi
 
   return (
     <div className="flex flex-col items-center justify-center p-8 space-y-3">
-      <div className={`${sizeClasses} border-slate-200 border-t-blue-600 rounded-full animate-spin`} />
-      {message && <p className="text-xs font-mono text-slate-500 uppercase tracking-wider">{message}</p>}
+      <div className={`${sizeClasses} border-slate-800 border-t-cyan-400 rounded-full animate-spin shadow-sm`} />
+      {message && <p className="text-xs font-mono text-slate-400 uppercase tracking-wider">{message}</p>}
     </div>
   );
 };
