@@ -1,7 +1,20 @@
 {
   "subset": "FD001",
-  "selected_model": "Random Forest",
+  "selected_model": "XGBoost",
+  "selection_strategy": "Validation RMSE (Zero Test Leakage)",
   "rul_cap": 125,
+  "validation_performance": {
+    "MAE": 7.486,
+    "RMSE": 11.231,
+    "R2": 0.9275,
+    "NASA_PHM_Score": 10253.1
+  },
+  "test_performance": {
+    "MAE": 9.868,
+    "RMSE": 13.703,
+    "R2": 0.8831,
+    "NASA_PHM_Score": 279.0
+  },
   "benchmark": {
     "Ridge Baseline": {
       "validation": {
@@ -74,7 +87,8 @@
       }
     }
   },
-  "best_test_rmse": 12.959,
-  "best_test_mae": 9.638,
-  "best_test_nasa_score": 249.8
+  "best_val_rmse": 11.231,
+  "best_test_rmse": 13.703,
+  "best_test_mae": 9.868,
+  "best_test_nasa_score": 279.0
 }

@@ -18,6 +18,20 @@ export interface HealthAssessment {
   root_cause_sensors: RootCauseSensor[];
 }
 
+export interface PredictionProvenance {
+  engine_id: number;
+  current_cycle: number;
+  history_depth: number;
+  is_cold_start: boolean;
+  features_approximated: boolean;
+  calculation_method: string;
+  warnings: string[];
+  feature_count: number;
+  model_version: string;
+  dataset_version: string;
+  timestamp: string;
+}
+
 export interface PredictionResponse {
   engine_id: number;
   cycle: number;
@@ -26,6 +40,10 @@ export interface PredictionResponse {
   urgency_action: string;
   health_assessment: HealthAssessment;
   disclaimer: string;
+  created_at?: string;
+  model_version?: string;
+  dataset_version?: string;
+  provenance?: PredictionProvenance;
 }
 
 export interface FleetEngineSummary {
@@ -166,4 +184,44 @@ export interface MLOpsStatusResponse {
     last_modified: string;
   }>;
   api_status: string;
+}
+
+export interface MaintenanceScenarioDetail {
+  action_name: string;
+  estimated_rul_cycles: number;
+  rul_extension_cycles: number;
+  downtime_hours: number;
+  subsystem_wear_change: string;
+  feasibility: string;
+}
+
+export interface MaintenanceScenariosComparison {
+  current_state: {
+    cycle: number;
+    current_health_index: number;
+    projected_baseline_rul: number;
+  };
+  scenarios: {
+    no_action: MaintenanceScenarioDetail;
+    compressor_wash: MaintenanceScenarioDetail;
+    hot_section_inspection: MaintenanceScenarioDetail;
+    major_overhaul: MaintenanceScenarioDetail;
+  };
+}
+
+export interface SensorDriftDetail {
+  recent_mean: number;
+  baseline_mean: number;
+  baseline_std: number;
+  z_score: number;
+  drift_alert: boolean;
+}
+
+export interface MLOpsDriftResponse {
+  status: 'STABLE' | 'MODERATE_DRIFT' | 'SIGNIFICANT_DRIFT' | 'INSUFFICIENT_TELEMETRY' | 'UNAVAILABLE';
+  drift_detected: boolean;
+  samples_analyzed: number;
+  drifted_sensors_count: number;
+  sensor_drifts: Record<string, SensorDriftDetail>;
+  timestamp: string;
 }
